@@ -65,8 +65,18 @@ for m in sorted(matches.values(), key=lambda m: m["timestamp"], reverse=True):
             "mom": 1 if p.get("mom") == "1" else 0,
         })
     lineup.sort(key=lambda x: -x["rating"])
+    def team_stats(club_id):
+        agg = (m.get("aggregate") or {}).get(club_id) or {}
+        n = len(m.get("players", {}).get(club_id, {})) or 1
+        return {
+            "sh": num(agg.get("shots")), "pm": num(agg.get("passesmade")), "pa": num(agg.get("passattempts")),
+            "tm": num(agg.get("tacklesmade")), "ta": num(agg.get("tackleattempts")), "sv": num(agg.get("saves")),
+            "red": num(agg.get("redcards")), "rating": round(num(agg.get("rating"), float) / n, 2), "humans": n,
+        }
+
     rows.append({
         "id": m["matchId"], "ts": m["timestamp"],
+        "us": team_stats(CID), "them": team_stats(opp_id),
         "type": m.get("_type") or TYPE_LABEL.get(me.get("matchType"), "Otro"),
         "opp": (opp.get("details") or {}).get("name", "Rival").strip(),
         "gf": gf, "ga": ga, "res": res, "dnf": dnf,
