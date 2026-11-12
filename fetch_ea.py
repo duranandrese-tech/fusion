@@ -68,11 +68,12 @@ def main():
     # 1) Partidos: se juntan con los que ya teníamos
     stored = {m["matchId"]: m for m in load("matches.json", [])}
     before = len(stored)
-    for mt in ("leagueMatch", "playoffMatch"):
+    for mt, label in (("leagueMatch", "Liga"), ("playoffMatch", "Playoff"), ("friendlyMatch", "Amistoso")):
         try:
             got = get("clubs/matches", matchType=mt, platform=PLATFORM, clubIds=CLUB_ID)
             ok += 1
             for m in got or []:
+                m["_type"] = label  # de qué lista vino el partido
                 stored[m["matchId"]] = m
             print(f"{mt}: {len(got or [])} partidos recibidos")
         except RuntimeError as e:

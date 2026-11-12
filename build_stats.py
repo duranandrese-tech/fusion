@@ -34,82 +34,81 @@ def num(x, cast=int):
         return cast(0)
 
 rows = []
-players = defaultdict(lambda: Counter())
-player_pos = defaultdict(Counter)
-player_ratings = defaultdict(list)
+lines = []  # una fila por jugador y partido
 
 for m in sorted(matches.values(), key=lambda m: m["timestamp"], reverse=True):
     me = m["clubs"][CID]
     opp_id = next(c for c in m["clubs"] if c != CID)
     opp = m["clubs"][opp_id]
     gf, ga = num(me["goals"]), num(opp["goals"])
-    if me.get("wins") == "1":
-        res = "G"
-    elif me.get("losses") == "1":
-        res = "P"
-    else:
-        res = "E"
+    res = "G" if me.get("wins") == "1" else "P" if me.get("losses") == "1" else "E"
     dnf = me.get("winnerByDnf") == "1" or opp.get("winnerByDnf") == "1"
-    plist = m.get("players", {}).get(CID, {})
+    mtype = m.get("_type") or TYPE_LABEL.get(me.get("matchType"), "Otro")
     scorers, assisters, motm, lineup = [], [], None, []
-    for pid, p in plist.items():
+    for pid, p in m.get("players", {}).get(CID, {}).items():
         n = p["playername"]
         g, a = num(p["goals"]), num(p["assists"])
+        pos = POS_ES.get(p.get("pos"), p.get("pos"))
         if g: scorers.append({"name": n, "n": g})
         if a: assisters.append({"name": n, "n": a})
         if p.get("mom") == "1": motm = n
-        lineup.append({"name": n, "pos": POS_ES.get(p.get("pos"), p.get("pos")), "rating": num(p["rating"], float),
-                       "g": g, "a": a})
-        s = players[n]
-        s["pj"] += 1
-        s["sec"] += num(p["secondsPlayed"])
-        s["g"] += g; s["a"] += a
-        s["shots"] += num(p["shots"])
-        s["pm"] += num(p["passesmade"]); s["pa"] += num(p["passattempts"])
-        s["tm"] += num(p["tacklesmade"]); s["ta"] += num(p["tackleattempts"])
-        s["mom"] += 1 if p.get("mom") == "1" else 0
-        s["red"] += num(p["redcards"])
-        s["w"] += 1 if res == "G" else 0
-        player_pos[n][POS_ES.get(p.get("pos"), p.get("pos"))] += 1
-        player_ratings[n].append(num(p["rating"], float))
+        lineup.append({"name": n, "pos": pos, "rating": num(p["rating"], float), "g": g, "a": a})
+        lines.append({"type": mtype, "name": n, "pos": pos, "res": res, "rating": num(p["rating"], float),
+                      "sec": num(p["secondsPlayed"]), "g": g, "a": a, "shots": num(p["shots"]),
+                      "pm": num(p["passesmade"]), "pa": num(p["passattempts"]),
+                      "tm": num(p["tacklesmade"]), "ta": num(p["tackleattempts"]),
+                      "mom": 1 if p.get("mom") == "1" else 0})
     lineup.sort(key=lambda x: -x["rating"])
     rows.append({
-        "id": m["matchId"],
-        "ts": m["timestamp"],
-        "type": TYPE_LABEL.get(me.get("matchType"), "Otro"),
+        "id": m["matchId"], "ts": m["timestamp"], "type": mtype,
         "opp": opp["details"]["name"].strip() if opp.get("details") else "Rival",
-        "gf": gf, "ga": ga, "res": res, "dnf": dnf,
-        "motm": motm,
+        "gf": gf, "ga": ga, "res": res, "dnf": dnf, "motm": motm,
         "scorers": sorted(scorers, key=lambda x: -x["n"]),
         "assists": sorted(assisters, key=lambda x: -x["n"]),
         "lineup": lineup,
     })
 
-plist = []
-for n, s in players.items():
-    mins = s["sec"] / 60
-    p90 = (lambda v: round(v * 90 / mins, 2) if mins >= 1 else 0)
-    plist.append({
-        "name": n,
-        "pos": player_pos[n].most_common(1)[0][0],
-        "pj": s["pj"], "min": round(mins),
-        "rating": round(sum(player_ratings[n]) / len(player_ratings[n]), 2),
-        "g": s["g"], "a": s["a"], "ga90": p90(s["g"] + s["a"]),
-        "shots": s["shots"],
-        "passPct": round(100 * s["pm"] / s["pa"]) if s["pa"] else None,
-        "pass90": p90(s["pm"]),
-        "tacklePct": round(100 * s["tm"] / s["ta"]) if s["ta"] else None,
-        "tackles90": p90(s["tm"]),
-        "mom": s["mom"], "wins": s["w"],
-    })
-plist.sort(key=lambda p: (-p["rating"], -p["min"]))
 
-summary = Counter()
-for r in rows:
-    summary["pj"] += 1
-    summary[r["res"]] += 1
-    summary["gf"] += r["gf"]; summary["ga"] += r["ga"]
-    summary["cs"] += 1 if r["ga"] == 0 else 0
+def players_from(ls):
+    by = defaultdict(list)
+    for l in ls:
+        by[l["name"]].append(l)
+    out = []
+    for n, L in by.items():
+        sec = sum(l["sec"] for l in L); mins = sec / 60
+        p90 = (lambda v: round(v * 90 / mins, 2) if mins >= 1 else 0)
+        tot = lambda k: sum(l[k] for l in L)
+        out.append({
+            "name": n, "pos": Counter(l["pos"] for l in L).most_common(1)[0][0],
+            "pj": len(L), "min": round(mins),
+            "rating": round(sum(l["rating"] for l in L) / len(L), 2),
+            "g": tot("g"), "a": tot("a"), "ga90": p90(tot("g") + tot("a")),
+            "shots": tot("shots"),
+            "passPct": round(100 * tot("pm") / tot("pa")) if tot("pa") else None,
+            "pass90": p90(tot("pm")),
+            "tacklePct": round(100 * tot("tm") / tot("ta")) if tot("ta") else None,
+            "tackles90": p90(tot("tm")),
+            "mom": tot("mom"), "wins": sum(1 for l in L if l["res"] == "G"),
+        })
+    out.sort(key=lambda p: (-p["rating"], -p["min"]))
+    return out
+
+
+def summary_from(rs):
+    s = Counter()
+    for r in rs:
+        s["pj"] += 1; s[r["res"]] += 1
+        s["gf"] += r["gf"]; s["ga"] += r["ga"]
+        s["cs"] += 1 if r["ga"] == 0 else 0
+    return dict(s)
+
+
+filters = {"Todos": None, "Liga": "Liga", "Playoff": "Playoff", "Amistoso": "Amistoso"}
+by_type = {}
+for key, typ in filters.items():
+    rs = [r for r in rows if typ is None or r["type"] == typ]
+    ls = [l for l in lines if typ is None or l["type"] == typ]
+    by_type[key] = {"summary": summary_from(rs), "players": players_from(ls)}
 
 members = None
 mp = os.path.join(data_dir, "members.json")
@@ -119,10 +118,9 @@ if os.path.exists(mp):
 out = {
     "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
     "club": club,
-    "summary": dict(summary),
     "matches": rows,
-    "players": plist,
+    "byType": by_type,
     "members": members,
 }
 json.dump(out, open(out_path, "w"), ensure_ascii=False, indent=1)
-print(f"{len(rows)} partidos, {len(plist)} jugadores -> {out_path}")
+print(f"{len(rows)} partidos, {len(lines)} líneas de jugador -> {out_path}")
