@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fusion Esports — Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0A0C; --surface:#1A1216; --surface2:#22171C; --border:#3A2530;
+    --text:#F5EDEF; --muted:#B29BA4; --faint:#7D6670;
+    --accent:#E76D10; --accent-soft:rgba(231,109,16,.14); --wine:#3D0B21;
+    --win:#2BB673; --draw:#C9A227; --loss:#E0464B;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
+  .wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+  h1,h2,.num{font-family:Rajdhani,Inter,sans-serif;letter-spacing:.01em}
+  h2{font-size:22px;margin:36px 0 12px}
+  .hero{background:linear-gradient(135deg,var(--wine) 0%,#1A0F14 70%);border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+  .crest{width:64px;height:64px;border-radius:14px;background:var(--accent);display:grid;place-items:center;font:700 26px Rajdhani;color:#1A0F14;flex:none}
+  .id{display:flex;gap:16px;align-items:center}
+  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-size:40px;line-height:1;margin:4px 0}
+  .sub{color:var(--muted);font-size:14px}
+  .big{display:flex;gap:28px;flex-wrap:wrap}
+  .big .num{font-size:36px;font-weight:700;color:var(--accent);line-height:1}
+  .big .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+  .tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+  .tile .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .tile .num{font-size:30px;font-weight:700;margin-top:4px}
+  .tile .note{font-size:12px;color:var(--faint)}
+  .form{display:flex;gap:6px;margin:10px 0 0}
+  .pill{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 13px Inter;color:#0E0A0C}
+  .G{background:var(--win)} .E{background:var(--draw)} .P{background:var(--loss)}
+  .matches{display:grid;gap:10px}
+  .match{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .match summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 16px}
+  .match summary::-webkit-details-marker{display:none}
+  .score{font:700 24px Rajdhani;white-space:nowrap}
+  .opp{font-weight:600}
+  .meta{font-size:12px;color:var(--muted)}
+  .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-left:6px;font-weight:600}
+  .lineup{border-top:1px solid var(--border);padding:10px 16px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 18px;font-size:13px}
+  .lineup div{display:flex;justify-content:space-between;gap:8px}
+  .lineup .r{font-weight:600}
+  .hi{color:var(--accent)}
+  .leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .leader .who{font-weight:600;font-size:16px;margin-top:2px;overflow-wrap:anywhere}
+  .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+  th,td{padding:10px 12px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+  th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+  th.sorted{color:var(--accent)}
+  tbody tr+tr td{border-top:1px solid #2A1C22}
+  td.name{font-weight:600}
+  .posb{font-size:11px;color:var(--muted);margin-left:6px;font-weight:500}
+  .bar{display:inline-block;height:6px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-left:8px;opacity:.85}
+  .notes{color:var(--muted);font-size:13px;line-height:1.6}
+  .notes li{margin-bottom:4px}
+  footer{margin-top:32px;color:var(--faint);font-size:12px}
+  @media (max-width:560px){h1{font-size:32px}.big .num{font-size:28px}.match summary{grid-template-columns:auto 1fr;}.match summary .score{grid-column:1/-1;order:-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="id">
+      <div class="crest">FE</div>
+      <div>
+        <div class="kicker">Estadísticas de Pro Clubs · PS5</div>
+        <h1 id="clubName"></h1>
+        <div class="sub" id="clubSub"></div>
+      </div>
+    </div>
+    <div class="big">
+      <div><div class="num" id="winPct"></div><div class="lbl">% victorias histórico</div></div>
+      <div><div class="num" id="record"></div><div class="lbl">Récord G-E-P</div></div>
+    </div>
+  </section>
+
+  <h2>Líderes de la temporada</h2>
+  <div class="leaders" id="leaders"></div>
+
+  <h2>Plantilla · temporada completa</h2>
+  <p class="sub" style="margin-top:-6px">Todos los partidos de cada jugador con el club. Toca una columna para ordenar.</p>
+  <div class="tablewrap"><table id="season"><thead></thead><tbody></tbody></table></div>
+
+  <h2 id="recent-title">Últimos partidos</h2>
+  <div class="tiles" id="recentTiles"></div>
+  <div class="form" id="form" aria-label="Forma reciente"></div>
+  <div class="matches" id="matches" style="margin-top:14px"></div>
+
+  <h2>Jugadores en los últimos partidos</h2>
+  <p class="sub" style="margin-top:-6px">“/90” es por cada 90 minutos jugados.</p>
+  <div class="tablewrap"><table id="players"><thead></thead><tbody></tbody></table></div>
+
+  <h2>Histórico del club</h2>
+  <div class="tiles" id="allTime"></div>
+
+  <h2>Cómo leer esto</h2>
+  <ul class="notes" id="notes"></ul>
+
+  <footer id="footer"></footer>
+</div>
+
+<script id="stats" type="application/json">__STATS__</script>
+<script>
+(function(){
+  const raw = document.getElementById('stats').textContent.trim();
+  if (raw && raw !== '__STATS__') { render(JSON.parse(raw)); }
+  else {
+    fetch('stats.json?t=' + Date.now(), {cache: 'no-store'})
+      .then(r => r.json()).then(render)
+      .catch(() => { document.getElementById('clubName').textContent = 'No se pudieron cargar las stats'; });
+    setTimeout(() => location.reload(), 10 * 60 * 1000); // se refresca solo cada 10 min
+  }
+})();
+
+function render(S){
+  const $ = id => document.getElementById(id);
+  const el = (tag, cls, text) => { const e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; };
+  const fmt = (v,d=0) => v==null ? '—' : Number(v).toLocaleString('es',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const c = S.club;
+
+  // Hero
+  const W=+c.wins, T=+c.ties, L=+c.losses, GP=+c.gamesPlayed;
+  $('clubName').textContent = c.clubName;
+  $('clubSub').textContent = `División ${c.currentDivision} · ${c.stadName || ''} · ${GP} partidos de liga`;
+  $('winPct').textContent = fmt(100*W/GP,1)+'%';
+  $('record').textContent = `${W}-${T}-${L}`;
+
+  // Recent tiles
+  const s=S.summary, n=s.pj||0;
+  const tiles=[
+    ['Récord', `${s.G||0}-${s.E||0}-${s.P||0}`, `en ${n} partidos guardados`],
+    ['Goles', `${s.gf||0} : ${s.ga||0}`, `${fmt((s.gf||0)/n,1)} a favor por partido`],
+    ['Diferencia', ((s.gf-s.ga)>0?'+':'')+(s.gf-s.ga), 'goles a favor menos en contra'],
+    ['Vallas invictas', s.cs||0, `de ${n}`],
+  ];
+  tiles.forEach(([l,v,nt])=>{const t=el('div','tile');t.append(el('div','lbl',l),el('div','num',v),el('div','note',nt));$('recentTiles').append(t);});
+
+  // Form (oldest -> newest left to right reads naturally; show newest first like most apps)
+  S.matches.forEach(m=>{const p=el('div','pill '+m.res,m.res);p.title=`${m.gf}-${m.ga} vs ${m.opp}`;$('form').append(p);});
+
+  // Matches
+  const dt = ts => new Date(ts*1000).toLocaleString('es',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  S.matches.forEach(m=>{
+    const d=el('details','match'); const sm=el('summary');
+    const pill=el('div','pill '+m.res,m.res);
+    const mid=el('div'); const o=el('div','opp','vs '+m.opp);
+    if(m.dnf) o.append(el('span','tag','Rival abandonó'));
+    const parts=[dt(m.ts), m.type];
+    if(m.scorers.length) parts.push('⚽ '+m.scorers.map(x=>x.name+(x.n>1?' ×'+x.n:'')).join(', '));
+    if(m.motm) parts.push('MVP: '+m.motm);
+    mid.append(o, el('div','meta',parts.join(' · ')));
+    sm.append(pill, mid, el('div','score',`${m.gf} – ${m.ga}`));
+    d.append(sm);
+    const lu=el('div','lineup');
+    m.lineup.forEach(p=>{const r=el('div');const left=el('span',null,`${p.name} `);left.append(el('span','posb',p.pos));
+      const extra=[p.g?`${p.g}G`:'',p.a?`${p.a}A`:''].filter(Boolean).join(' ');
+      const right=el('span','r'+(p.name===m.motm?' hi':''),(extra?extra+' · ':'')+fmt(p.rating,1));
+      r.append(left,right);lu.append(r);});
+    d.append(lu); $('matches').append(d);
+  });
+
+  // Generic sortable table
+  function table(id, rows, cols, initKey){
+    let sortKey=initKey, dir=-1;
+    const tb=$(id), hr=el('tr'), body=tb.tBodies[0];
+    cols.forEach(([k,l])=>{const th=el('th',null,l);th.dataset.k=k;th.onclick=()=>{dir=(sortKey===k)?-dir:(k==='name'?1:-1);sortKey=k;render();};hr.append(th);});
+    tb.tHead.append(hr);
+    const maxR=Math.max(...rows.map(p=>p.rating||0));
+    function render(){
+      [...hr.children].forEach(th=>th.classList.toggle('sorted',th.dataset.k===sortKey));
+      body.textContent='';
+      rows.slice().sort((a,b)=>{const x=a[sortKey],y=b[sortKey];if(typeof x==='string')return dir*x.localeCompare(y);return dir*((x??-1)-(y??-1));})
+       .forEach(p=>{const tr=el('tr');cols.forEach(([k,,d])=>{
+          let td;
+          if(k==='name'){td=el('td','name',p.name);td.append(el('span','posb',p.pos));}
+          else if(k==='rating'){td=el('td',null,fmt(p.rating,d));const b=el('span','bar');b.style.width=Math.round(40*p.rating/maxR)+'px';td.append(b);}
+          else if(k.endsWith('Pct')){td=el('td',null,p[k]==null?'—':p[k]+'%');}
+          else td=el('td',null,fmt(p[k],d));
+          tr.append(td);});body.append(tr);});
+    }
+    render();
+  }
+
+  // Season (members/stats)
+  const POS={goalkeeper:'POR',defender:'DEF',midfielder:'MED',forward:'DEL'};
+  const M=((S.members&&S.members.members)||[]).filter(m=>+m.gamesPlayed>0).map(m=>({
+    name:m.name,pos:POS[m.favoritePosition]||'',pj:+m.gamesPlayed,winPct:+m.winRate,g:+m.goals,a:+m.assists,
+    gapj:(+m.goals + +m.assists)/+m.gamesPlayed,rating:+m.ratingAve,passPct:+m.passSuccessRate,shotPct:+m.shotSuccessRate,
+    tacklePct:+m.tackleSuccessRate,mom:+m.manOfTheMatch,ovr:+m.proOverall,red:+m.redCards}));
+  const reg=M.filter(p=>p.pj>=10);
+  const top=(arr,key)=>arr.slice().sort((a,b)=>b[key]-a[key])[0];
+  [['Goleador',M,'g',p=>`${p.g} goles en ${p.pj} partidos`],
+   ['Asistidor',M,'a',p=>`${p.a} asistencias en ${p.pj} partidos`],
+   ['Mejor nota',reg,'rating',p=>`${fmt(p.rating,1)} de promedio (mín. 10 PJ)`],
+   ['Más MVP',M,'mom',p=>`${p.mom} veces MVP`],
+   ['Más G+A por partido',reg,'gapj',p=>`${fmt(p.gapj,2)} por partido (mín. 10 PJ)`],
+   ['Más partidos',M,'pj',p=>`${p.pj} partidos · ${p.winPct}% ganados`]]
+  .forEach(([l,arr,k,f])=>{const p=top(arr,k);if(!p)return;const t=el('div','tile leader');t.append(el('div','lbl',l),el('div','who',p.name),el('div','note',f(p)));$('leaders').append(t);});
+  table('season',M,[['name','Jugador'],['pj','PJ',0],['winPct','% gana',0],['g','Goles',0],['a','Asist.',0],['gapj','G+A /PJ',2],
+    ['rating','Nota',1],['shotPct','% tiros',0],['passPct','% pases',0],['tacklePct','% entradas',0],['mom','MVP',0],['ovr','Media',0]],'pj');
+
+  // Recent players
+  const P=S.players;
+  table('players',P,[
+    ['name','Jugador',0],['pj','PJ',0],['min','Min',0],['rating','Nota',2],['g','Goles',0],['a','Asist.',0],
+    ['ga90','G+A /90',2],['shots','Tiros',0],['passPct','% pases',0],['pass90','Pases /90',1],
+    ['tacklePct','% entradas',0],['tackles90','Entradas /90',1],['mom','MVP',0]],'rating');
+
+  // All-time
+  [['Partidos de liga',GP,`${c.gamesPlayedPlayoff} de playoff aparte`],['Goles',`${c.goals} : ${c.goalsAgainst}`,`${fmt(c.goals/GP,1)} por partido`],
+   ['Vallas invictas',c.cleanSheets,`${fmt(100*c.cleanSheets/GP,0)}% de los partidos`],['División',c.currentDivision,`Mejor: ${c.bestDivision} · ${c.promotions} ascensos`]]
+  .forEach(([l,v,nt])=>{const t=el('div','tile');t.append(el('div','lbl',l),el('div','num',v),el('div','note',nt));$('allTime').append(t);});
+
+  // Notes
+  [
+    `“Últimos partidos” y la tabla de jugadores usan los ${n} partidos de liga guardados. EA solo muestra los más recientes; cuando se actualice solo, el historial se va a ir acumulando.`,
+    'Solo aparecen los jugadores humanos. Los de la IA no salen en los datos de EA.',
+    'Las stats por 90 se calculan con los minutos que jugó cada uno; con pocos partidos se mueven mucho.',
+    '“Rival abandonó”: el partido terminó antes y EA se lo dio por ganado a Fusion.',
+    '“Histórico del club” es el resumen que da EA de toda la temporada en liga.',
+    '“Plantilla” cuenta todos los partidos de cada jugador con el club (no solo liga), por eso hay jugadores con más partidos que el club en liga. xMilan14- juega con ustedes pero no sale ahí: EA solo lista a los miembros del club.'
+  ].forEach(t=>$('notes').append(el('li',null,t)));
+
+  $('footer').textContent = `Datos de la API de Clubes de EA · actualizado ${new Date(S.generatedAt).toLocaleString('es',{dateStyle:'medium',timeStyle:'short'})} · No afiliado con EA Sports`;
+}
+</script>
+</body>
+</html>

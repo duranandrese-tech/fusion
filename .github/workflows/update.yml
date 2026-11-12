@@ -1,0 +1,36 @@
+name: Actualizar stats
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # cada 15 min (GitHub a veces se atrasa un poco)
+  workflow_dispatch:          # botón "Run workflow" para correrlo a mano
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actualizar-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Traer datos de EA
+        run: python3 fetch_ea.py
+
+      - name: Recalcular stats y guardar si hay algo nuevo
+        run: |
+          git config user.name "fusion-bot"
+          git config user.email "fusion-bot@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Sin partidos nuevos."
+            exit 0
+          fi
+          python3 build_stats.py data docs/stats.json
+          git add data docs
+          git commit -m "Stats actualizadas $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push
