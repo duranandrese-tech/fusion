@@ -338,6 +338,45 @@
     .mc{grid-template-columns:52px 1fr auto;gap:10px;padding:10px 12px}
   }
 
+  /* Muestras chicas */
+  tr.few td{opacity:.45}
+  tr.few td.name .pos::after{content:" · pocos partidos";text-transform:none;letter-spacing:0}
+
+  /* Rankings top 5 */
+  .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .rcard{background:var(--s1);border:1px solid #1F1F1F;border-radius:14px;padding:14px 16px 10px;display:flex;flex-direction:column}
+  .rcard .rh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .rcard .rt{font:800 21px/1.1 var(--cond)}
+  .rcard .rn{font-size:12px;color:var(--faint);margin:2px 0 8px;min-height:16px}
+  .dl{all:unset;cursor:pointer;display:inline-flex;gap:6px;align-items:center;font:600 13px/1 var(--cond);letter-spacing:.03em;color:var(--gold2);
+      border:1px solid #3A3226;border-radius:8px;padding:6px 9px;white-space:nowrap;transition:background .15s,border-color .15s}
+  .dl:hover{background:rgba(234,184,111,.1);border-color:var(--gold)}
+  .dl:focus-visible{outline:2px solid var(--gold2)}
+  .dl svg{width:14px;height:14px}
+  .rrow{display:grid;grid-template-columns:20px 1fr auto;gap:2px 10px;align-items:baseline;padding:8px 0 7px;border-top:1px solid #1E1E1E}
+  .rrow .ri{font:700 15px var(--cond);color:var(--faint)}
+  .rrow .rv{font:800 20px var(--cond)}
+  .rrow .rs{grid-column:2/3;font-size:12px;color:var(--faint)}
+  .rrow .rbar{grid-column:2/4;height:4px;border-radius:2px;background:#1E1E1E;overflow:hidden;margin-top:3px}
+  .rrow .rbar i{display:block;height:100%;background:#5A5348;transform-origin:left;transition:transform .7s cubic-bezier(.2,.8,.3,1)}
+  .rrow.first .rv{color:var(--gold)} .rrow.first .rbar i{background:var(--gold)}
+  .rrow.few{opacity:.45}
+  .rcard .none{color:var(--muted);font-size:14px;padding:10px 0;border-top:1px solid #1E1E1E}
+
+  /* Composición */
+  .comp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .cblock{background:var(--s1);border:1px solid #1F1F1F;border-radius:14px;padding:14px 16px 8px}
+  .cblock .ct{font:800 20px/1.1 var(--cond)}
+  .cblock .cn{font-size:12px;color:var(--faint);margin:2px 0 6px}
+  .crow2{display:grid;grid-template-columns:1fr auto;gap:3px 10px;padding:9px 0 8px;border-top:1px solid #1E1E1E}
+  .crow2 .cl2{font-weight:600}
+  .crow2 .cv{font:800 20px var(--cond)}
+  .crow2 .cbar{grid-column:1/-1;height:8px;border-radius:4px;background:#1E1E1E;overflow:hidden}
+  .crow2 .cbar i{display:block;height:100%;border-radius:4px;background:var(--gold);transform-origin:left;transition:transform .7s cubic-bezier(.2,.8,.3,1)}
+  .crow2 .cs{grid-column:1/-1;font-size:12px;color:var(--muted)}
+  .crow2.few{opacity:.45}
+  .crow2.best .cv{color:var(--gold)}
+
   details.notes{margin-top:40px;color:var(--muted);font-size:14px}
   details.notes summary{cursor:pointer;font:600 18px var(--cond);color:var(--text)}
   details.notes li{margin:6px 0;max-width:75ch}
@@ -364,6 +403,8 @@
     .phead .ovr{font-size:52px} .phead .nm{font-size:26px}
     .pbody{padding:6px 16px 20px}
   }
+  @media (max-width:900px){ .rgrid,.comp{grid-template-columns:1fr 1fr} }
+  @media (max-width:560px){ .rgrid,.comp{grid-template-columns:1fr} }
   @media (max-width:420px){ .grid3{grid-template-columns:1fr} .grid3 > div:nth-child(even){border-left:0} }
   @media (prefers-reduced-motion:no-preference){
     .board .goals{animation:pop .5s cubic-bezier(.2,.9,.3,1.2) both}
@@ -443,7 +484,7 @@
   <!-- JUGADORES -->
   <section data-view="jugadores" hidden>
     <h2>Jugadores</h2>
-    <p class="lede">Stats en los partidos guardados. “/90” es por cada 90 minutos de juego. La forma son las notas de sus últimos partidos. Toca una columna para ordenar.</p>
+    <p class="lede">Stats en los partidos guardados. “/90” es por cada 90 minutos de juego. La forma son las notas de sus últimos partidos. Los que tienen menos de 5 partidos se ven apagados. Toca una columna para ordenar.</p>
     <div class="tw"><table class="wide" id="playersT"><thead></thead><tbody></tbody></table></div>
 
     <h2>Temporada completa</h2>
@@ -456,6 +497,8 @@
   <section data-view="sesiones" hidden>
     <h2>Sesiones</h2>
     <p class="lede">Cada sesión es una tanda de partidos seguidos, con menos de hora y media entre uno y otro. El MVP de la sesión es quien tuvo mejor nota promedio.</p>
+    <div class="legend"><span><i style="background:var(--win)"></i>Ganados</span><span><i style="background:var(--draw)"></i>Empatados</span><span><i style="background:var(--loss)"></i>Perdidos</span></div>
+    <div class="chart" id="chSess"></div>
     <div id="sessions"></div>
   </section>
 
@@ -469,10 +512,9 @@
     <p class="lede">Lo mejor que ha pasado en los partidos guardados.</p>
     <div class="records" id="records"></div>
 
-    <div class="twocol">
-      <div><h3>Goleadores</h3><div class="tw"><table id="topG"><thead></thead><tbody></tbody></table></div></div>
-      <div><h3>Asistidores</h3><div class="tw"><table id="topA"><thead></thead><tbody></tbody></table></div></div>
-    </div>
+    <h2>Rankings</h2>
+    <p class="lede" id="rankLede"></p>
+    <div class="rgrid" id="rgrid"></div>
 
     <h2>Salón de la fama</h2>
     <p class="lede">Hat-tricks y partidos con nota de 9,5 o más.</p>
@@ -484,6 +526,10 @@
     <h2>¿Quién nos hace ganar?</h2>
     <p class="lede" id="impactLede"></p>
     <div class="tw"><table class="wide" id="impactT"><thead></thead><tbody></tbody></table></div>
+
+    <h2>¿Con qué equipo ganamos más?</h2>
+    <p class="lede">Cómo salieron los partidos según cuántos humanos jugaron y dónde. Tómalo como una pista, no como una prueba: el rival también cuenta y eso no está en los datos. Los grupos con menos de 5 partidos se ven apagados.</p>
+    <div class="comp" id="comp"></div>
 
     <h2>Por posición</h2>
     <p class="lede">Cada jugador cuenta solo los partidos que jugó en esa posición. Números por cada 90 minutos.</p>
@@ -533,6 +579,7 @@
     <div class="top2"><span id="mWhen"></span><button class="close" id="mClose" aria-label="Cerrar partido" style="all:unset;cursor:pointer;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:20px;color:var(--muted);border:1px solid var(--line)">×</button></div>
     <div class="sl" id="mTitle"></div>
     <div class="scorers" id="mScorers" style="text-align:center;margin-top:8px"></div>
+    <div style="text-align:center;margin-top:10px"><button type="button" class="dl" id="mDl"></button></div>
   </div>
   <div class="sbody">
     <div class="sgrid">
@@ -545,7 +592,8 @@
   <div class="phead">
     <div class="ovr" id="pOvr"></div>
     <div><div class="nm" id="pName"></div><div class="muted small" id="pSub"></div></div>
-    <button class="close" id="pClose" aria-label="Cerrar perfil">×</button>
+    <button type="button" class="dl" id="pDl" style="margin-left:auto;align-self:center"></button>
+    <button class="close" id="pClose" aria-label="Cerrar perfil" style="margin-left:10px">×</button>
   </div>
   <div class="pbody">
     <div class="pgrid">
@@ -658,7 +706,8 @@ function boot(S){
   const minPJ = n => Math.max(2, Math.ceil(n * 0.25));
 
   /* Tabla ordenable */
-  function makeTable(id, cols, initKey, initDir=-1){
+  const FEW = 5;
+  function makeTable(id, cols, initKey, initDir=-1, fewFn = p => p.pj < FEW){
     const tb = $(id), head = el('tr'); let key = initKey, dir = initDir, rows = [];
     cols.forEach(col => {
       const th = el('th', null, col.label); th.scope = 'col';
@@ -678,7 +727,7 @@ function boot(S){
       if (!rows.length) { const tr = el('tr'), td = el('td', 'empty', 'Todavía no hay datos suficientes para esta tabla.'); td.colSpan = cols.length; td.style.textAlign = 'left'; tr.append(td); body.append(tr); return; }
       const ctx = {maxRating: Math.max(...rows.map(p => p.rating || 0)) || 1};
       rows.slice().sort((a, b) => { const x = a[key], y = b[key]; return typeof x === 'string' ? dir * x.localeCompare(y) : dir * ((x ?? -1e9) - (y ?? -1e9)); })
-        .forEach(p => { const tr = el('tr'); cols.forEach(col => { const td = el('td'); col.cell(td, p, ctx); tr.append(td); }); body.append(tr); });
+        .forEach(p => { const tr = el('tr'); if (fewFn && fewFn(p)) tr.className = 'few'; cols.forEach(col => { const td = el('td'); col.cell(td, p, ctx); tr.append(td); }); body.append(tr); });
     }
     return { set(r){ rows = r; draw(); } };
   }
@@ -779,6 +828,7 @@ function boot(S){
       const ev = el('span','evs'); if (l.g) ev.append(icon('ball', l.g)); if (l.a) ev.append(icon('assist', l.a)); if (l.mom) ev.append(icon('star'));
       r.append(avatar(l.name), nm, ev, rb(l.rating)); ls.append(r); });
     ls.querySelectorAll('.plink').forEach(b => { const f = b.onclick; b.onclick = e => { mdlg.close(); f(e); }; });
+    const md = $('mDl'); md.innerHTML = DLICON; md.append('Descargar tarjeta del partido'); md.onclick = () => cardMatch(m);
     mdlg.showModal(); mdlg.scrollTop = 0;
   }
   function stripInto(container, items){
@@ -973,6 +1023,7 @@ function boot(S){
       if (s && m.ts - s[s.length - 1].ts < 90 * 60) s.push(m); else sessions.push([m]);
     });
     if (!sessions.length) box.append(el('div','empty','No hay partidos de este tipo guardados todavía.'));
+    drawSessions(sessions);
     sessions.reverse().forEach(ms => {
       const ss = summary(ms), sp = aggregate(ms), sec = el('section','session');
       const head = el('div','sesshead');
@@ -1033,8 +1084,7 @@ function boot(S){
       recRow('Racha de victorias más larga', 'partidos seguidos ganando', '', bestW);
       recRow('Racha invicta más larga', 'partidos seguidos sin perder', '', bestU);
     }
-    makeTableOnce('topG', () => makeTable('topG', [C.name(), C.num('g','Goles'), C.num('pj','PJ'), C.num('g90','Por 90',2)], 'g')).set(P.filter(p => p.g).sort((a,b)=>b.g-a.g).slice(0,8));
-    makeTableOnce('topA', () => makeTable('topA', [C.name(), C.num('a','Asist.'), C.num('pj','PJ'), C.num('a90','Por 90',2)], 'a')).set(P.filter(p => p.a).sort((a,b)=>b.a-a.a).slice(0,8));
+    renderRankings(P, tname);
     const fame = $('fame'); fame.textContent = '';
     const fl = MS.flatMap(m => m.lineup.filter(l => l.g >= 3 || l.rating >= 9.5).map(l => ({...l, m}))).sort((a,b) => b.m.ts - a.m.ts);
     if (!fl.length) fame.append(el('div','empty','Todavía nadie. El primer hat-trick o la primera nota de 9,5 aparecen aquí.'));
@@ -1049,6 +1099,7 @@ function boot(S){
       return {...p, winWith: sw.winPct, winWithout: so.winPct, pjWithout: so.pj, diff: so.pj ? sw.winPct - so.winPct : null, gdWith: (sw.gf - sw.ga) / sw.pj};
     }));
     renderPos();
+    renderComposition();
     /* Duplas */
     const duo = new Map();
     MS.forEach(m => { const names = m.lineup.map(l => l.name).sort();
@@ -1106,6 +1157,209 @@ function boot(S){
   $('playerSel').onchange = drawPlayer;
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawCharts(); drawPlayer(); }, 150); });
 
+  /* ---------- rankings top 5 ---------- */
+  const DLICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
+  const dlButton = (label, fn) => { const b = el('button','dl'); b.type = 'button'; b.innerHTML = DLICON; b.append(label); b.onclick = fn; return b; };
+  const RANKS = [
+    {id:'goles', t:'Goleadores', k:'g', unit:'goles'},
+    {id:'asistencias', t:'Asistidores', k:'a', unit:'asistencias'},
+    {id:'ga', t:'Goles + asistencias', k:'gaT', unit:'G+A'},
+    {id:'tiros', t:'Tiros', k:'sh', unit:'tiros'},
+    {id:'nota', t:'Nota promedio', k:'rating', d:2, note:'3+ partidos', ok:p => p.pj >= 3},
+    {id:'pases', t:'Precisión de pases', k:'passPct', pct:true, note:'50+ pases intentados', ok:p => p.pa >= 50},
+    {id:'entradas', t:'Entradas ganadas', k:'tm', unit:'entradas'},
+    {id:'mvp', t:'Veces MVP', k:'mom', unit:'MVP'},
+    {id:'minutos', t:'Minutos jugados', k:'min', unit:'min'},
+  ];
+  const rv = (def, v) => def.pct ? pct(v) : fmt(v, def.d || 0);
+  function rankRows(def, P){ return P.filter(p => p[def.k] != null && p[def.k] > 0 && (!def.ok || def.ok(p))).sort((a,b) => b[def.k] - a[def.k] || a.pj - b.pj).slice(0, 5); }
+  function renderRankings(P, tname){
+    P.forEach(p => p.gaT = p.g + p.a);
+    $('rankLede').textContent = `Top 5 en ${tname ? 'los partidos guardados' + tname : 'todos los partidos guardados'}. Los que tienen menos de ${FEW} partidos se ven apagados. Descarga cualquier ranking como imagen para mandarlo al grupo.`;
+    const g = $('rgrid'); g.textContent = '';
+    RANKS.forEach(def => {
+      const rows = rankRows(def, P), card = el('div','rcard'), head = el('div','rh');
+      head.append(el('div','rt', def.t));
+      if (rows.length) head.append(dlButton('Tarjeta', () => cardRanking(def, rows, tname)));
+      card.append(head, el('div','rn', def.note || ''));
+      if (!rows.length) card.append(el('div','none','Todavía nadie.'));
+      rows.forEach((p, i) => {
+        const r = el('div', 'rrow' + (i === 0 ? ' first' : '') + (p.pj < FEW ? ' few' : '')), nm = el('span');
+        nm.append(plink(p.name));
+        const bar = el('div','rbar'), fill = el('i'); fill.dataset.w = (p[def.k] / rows[0][def.k]).toFixed(3); fill.style.transform = `scaleX(${fill.dataset.w})`; bar.append(fill);
+        r.append(el('span','ri', i + 1), nm, el('span','rv', rv(def, p[def.k])), el('span','rs', plural(p.pj, 'partido', 'partidos')), bar);
+        card.append(r);
+      });
+      g.append(card);
+    });
+  }
+
+  /* ---------- composición del equipo ---------- */
+  function renderComposition(){
+    const box = $('comp'); box.textContent = '';
+    const played = l => l.sec >= 1800;   // 30+ minutos de juego
+    const blocks = [
+      {t:'Humanos en el equipo', n:'Cuántos humanos jugaron; el resto eran de la IA.', key:m => { const h = m.lineup.filter(played).length; return h <= 4 ? '4 o menos' : h >= 8 ? '8 o más' : String(h); },
+       order:['4 o menos','5','6','7','8 o más'], label:k => k === '4 o menos' || k === '8 o más' ? k + ' humanos' : k + ' humanos'},
+      {t:'Defensas humanos', n:'Cuántos humanos jugaron en defensa.', key:m => { const d = m.lineup.filter(l => played(l) && l.pos === 'DEF').length; return d >= 2 ? '2 o más' : String(d); },
+       order:['0','1','2 o más'], label:k => k === '1' ? '1 defensa' : k + ' defensas'},
+      {t:'Portero', n:'Si el arco lo cuidó un humano o la IA.', key:m => m.lineup.some(l => played(l) && l.pos === 'POR') ? 'Humano' : 'IA',
+       order:['Humano','IA'], label:k => k === 'IA' ? 'Portero de la IA' : 'Portero humano'},
+    ];
+    blocks.forEach(b => {
+      const groups = {}; MS.filter(m => !m.dnf).forEach(m => (groups[b.key(m)] = groups[b.key(m)] || []).push(m));
+      const keys = b.order.filter(k => groups[k]);
+      const card = el('div','cblock'); card.append(el('div','ct', b.t), el('div','cn', b.n));
+      if (!keys.length) { card.append(el('div','empty','Todavía no hay partidos.')); box.append(card); return; }
+      const stats = keys.map(k => ({k, s: summary(groups[k])}));
+      const solid = stats.filter(x => x.s.pj >= FEW), best = (solid.length > 1 ? solid : []).sort((a,b) => b.s.winPct - a.s.winPct)[0];
+      stats.forEach(({k, s}) => {
+        const r = el('div', 'crow2' + (s.pj < FEW ? ' few' : '') + (best && best.k === k ? ' best' : '')), bar = el('div','cbar'), fill = el('i');
+        fill.dataset.w = (s.winPct / 100).toFixed(3); fill.style.transform = `scaleX(${fill.dataset.w})`; bar.append(fill);
+        r.append(el('span','cl2', b.label(k)), el('span','cv', pct(s.winPct)), bar,
+          el('span','cs', `${s.G} de ${plural(s.pj,'partido','partidos')} ganados, diferencia de goles ${sgn((s.gf - s.ga) / s.pj, 1)} por partido`));
+        card.append(r);
+      });
+      box.append(card);
+    });
+  }
+
+  /* ---------- resultados por sesión ---------- */
+  function drawSessions(sessions){
+    const box = $('chSess'); box.textContent = '';
+    const data = sessions.slice(-20).map(ms => ({ms, s: summary(ms), ts: ms[0].ts}));
+    if (data.length < 2) { box.append(el('div','empty', data.length ? 'Con la segunda sesión aparece aquí el gráfico de resultados sesión por sesión.' : 'Todavía no hay sesiones.')); return; }
+    const W = box.clientWidth || 600, H = 210, m = {t:24, r:6, b:24, l:6}, iw = W - m.l - m.r, ih = H - m.t - m.b, ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+    svg.setAttribute('role','img'); svg.setAttribute('aria-label', 'Resultados por sesión: ' + data.map(d => `${day(d.ts)} ${d.s.G}-${d.s.E}-${d.s.P}`).join('; '));
+    const mk = (tag, at) => { const e = document.createElementNS(ns, tag); for (const k in at) e.setAttribute(k, at[k]); return e; };
+    const maxN = Math.max(...data.map(d => d.s.pj)), band = iw / data.length, bw = Math.min(46, band * .62);
+    data.forEach((d, i) => {
+      const x = m.l + band * (i + .5) - bw / 2; let y = m.t + ih;
+      [['G','#4CC38A'],['E','#CFC6B6'],['P','#C9524B']].forEach(([k, col]) => {
+        const h = d.s[k] / maxN * ih; if (!h) return; y -= h;
+        svg.append(mk('rect', {x, y, width:bw, height:Math.max(0, h - 1.5), rx:3, fill:col}));
+      });
+      if (bw >= 30) { const tx = mk('text', {x:x + bw/2, y:y - 7, 'text-anchor':'middle', class:'lbl', style:'font:700 12px var(--cond);fill:var(--text)'}); tx.textContent = `${d.s.G}-${d.s.E}-${d.s.P}`; svg.append(tx); }
+      const every = Math.max(1, Math.ceil(data.length / Math.floor(iw / 60)));
+      if (i % every === 0 || i === data.length - 1) { const tl = mk('text', {x:x + bw/2, y:H - 6, 'text-anchor':'middle'}); tl.textContent = new Date(d.ts*1000).toLocaleDateString('es', {day:'numeric', month:'numeric'}); svg.append(tl); }
+    });
+    box.append(svg);
+    const tip = el('div','tip'); tip.hidden = true; box.append(tip);
+    const move = e => { const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width), i = Math.max(0, Math.min(data.length - 1, Math.floor((px - m.l) / band))), d = data[i];
+      tip.textContent = ''; tip.append(el('b', null, `${d.s.G}-${d.s.E}-${d.s.P}`), ` en ${plural(d.s.pj,'partido','partidos')}`, el('br'), `${day(d.ts)}, goles ${d.s.gf}:${d.s.ga}`);
+      tip.hidden = false; const cx = (m.l + band * (i + .5)) * r.width / W; tip.style.left = Math.max(0, Math.min(r.width - tip.offsetWidth, cx - tip.offsetWidth / 2)) + 'px'; tip.style.top = '0px'; };
+    svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move); svg.addEventListener('pointerleave', () => tip.hidden = true);
+  }
+
+  /* ---------- tarjetas para descargar (imagen 1080x1350) ---------- */
+  const CF = '"Barlow Condensed", "Arial Narrow", Arial, sans-serif', CB = 'Barlow, Arial, sans-serif';
+  const IMG = {}; ['logo.png','mark.png'].forEach(src => { const i = new Image(); i.src = src; IMG[src] = i; });
+  const imgReady = i => i.complete && i.naturalWidth ? Promise.resolve() : new Promise(r => { i.onload = i.onerror = r; });
+  const SITE = location.host + location.pathname.replace(/index\.html$/, '');
+  async function cardBase(title, subtitle){
+    try { await Promise.all([document.fonts.load('800 80px "Barlow Condensed"'), document.fonts.load('600 40px Barlow'), document.fonts.load('600 40px "Barlow Condensed"')]); } catch (e) {}
+    await Promise.all(Object.values(IMG).map(imgReady));
+    const cv = document.createElement('canvas'); cv.width = 1080; cv.height = 1350; const x = cv.getContext('2d');
+    x.fillStyle = '#000'; x.fillRect(0, 0, 1080, 1350);
+    const g = x.createRadialGradient(950, 0, 0, 950, 0, 900); g.addColorStop(0, 'rgba(234,184,111,.20)'); g.addColorStop(1, 'rgba(234,184,111,0)');
+    x.fillStyle = g; x.fillRect(0, 0, 1080, 1350);
+    if (IMG['mark.png'].naturalWidth) { x.globalAlpha = .06; x.drawImage(IMG['mark.png'], 560, 760, 620, 620 * IMG['mark.png'].naturalHeight / IMG['mark.png'].naturalWidth); x.globalAlpha = 1; }
+    if (IMG['logo.png'].naturalWidth) x.drawImage(IMG['logo.png'], 72, 64, 92, 92 * IMG['logo.png'].naturalHeight / IMG['logo.png'].naturalWidth);
+    x.fillStyle = '#F6EFE4'; x.font = '800 54px '+CF; x.textBaseline = 'alphabetic'; x.fillText(c.clubName.toUpperCase(), 184, 116);
+    x.fillStyle = '#B9AE9C'; x.font = '500 28px '+CB; x.fillText('Stats de Pro Clubs, PS5', 186, 156);
+    x.fillStyle = '#EAB86F'; x.font = '800 104px '+CF; fitText(x, title, 72, 300, 936, 104, ''+CF, 800);
+    if (subtitle) { x.fillStyle = '#B9AE9C'; x.font = '500 30px '+CB; x.fillText(subtitle, 74, 350); }
+    return {cv, x};
+  }
+  function fitText(x, text, px, py, maxW, size, family, weight){
+    let s = size; x.font = `${weight} ${s}px ${family}`;
+    while (x.measureText(text).width > maxW && s > 18) { s -= 2; x.font = `${weight} ${s}px ${family}`; }
+    x.fillText(text, px, py);
+  }
+  function rrect(x, X, Y, w, h, r){ x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
+  const RCOL = r => r >= 9 ? '#EAB86F' : r >= 8 ? '#35C27A' : r >= 7 ? '#A6CF3F' : r >= 6 ? '#F0A33A' : '#E5544B';
+  function cardFoot(x){
+    x.fillStyle = '#2C2C2C'; x.fillRect(72, 1250, 936, 2);
+    x.fillStyle = '#7E7668'; x.font = '500 26px '+CB;
+    x.fillText(SITE, 72, 1296);
+    x.textAlign = 'right'; x.fillText(new Date().toLocaleDateString('es', {day:'numeric', month:'long', year:'numeric'}), 1008, 1296); x.textAlign = 'left';
+  }
+  async function saveCard(cv, name){
+    const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+    const file = new File([blob], name + '.png', {type:'image/png'});
+    if (navigator.canShare && matchMedia('(pointer:coarse)').matches && navigator.canShare({files:[file]})) {
+      try { await navigator.share({files:[file], title: name}); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '.png'; document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  async function cardRanking(def, rows, tname){
+    const {cv, x} = await cardBase(def.t, (tname ? 'Partidos guardados' + tname : 'Todos los partidos guardados') + (def.note ? `, ${def.note}` : ''));
+    rows.forEach((p, i) => {
+      const y = 470 + i * 152, first = i === 0;
+      if (first) { x.fillStyle = 'rgba(234,184,111,.10)'; rrect(x, 56, y - 74, 968, 140, 18); x.fill(); }
+      x.fillStyle = first ? '#EAB86F' : '#7E7668'; x.font = '800 54px '+CF; x.fillText(String(i + 1), 84, y);
+      x.fillStyle = '#F6EFE4'; fitText(x, p.name, 150, y, 600, first ? 60 : 52, ''+CF, 800);
+      x.fillStyle = '#B9AE9C'; x.font = '500 26px '+CB; x.fillText(plural(p.pj, 'partido', 'partidos'), 152, y + 38);
+      x.textAlign = 'right'; x.fillStyle = first ? '#EAB86F' : '#F6EFE4'; x.font = `800 ${first ? 76 : 62}px ${CF}`; x.fillText(rv(def, p[def.k]), 1000, y + 6); x.textAlign = 'left';
+      x.fillStyle = '#1E1E1E'; rrect(x, 152, y + 52, 848, 10, 5); x.fill();
+      x.fillStyle = first ? '#EAB86F' : '#5A5348'; rrect(x, 152, y + 52, Math.max(12, 848 * p[def.k] / rows[0][def.k]), 10, 5); x.fill();
+    });
+    cardFoot(x); saveCard(cv, `fusion-${def.id}`);
+  }
+  async function cardMatch(m){
+    const {cv, x} = await cardBase(m.res === 'G' ? 'Victoria' : m.res === 'E' ? 'Empate' : 'Derrota', `${day(m.ts)}, ${m.type.toLowerCase()}${m.dnf ? ', con abandono' : ''}`);
+    x.textAlign = 'center';
+    x.fillStyle = '#EAB86F'; x.font = '800 230px '+CF; x.fillText(`${m.gf}  –  ${m.ga}`, 540, 600);
+    x.font = '700 42px '+CF; x.fillStyle = '#F6EFE4';
+    fitText(x, c.clubName, 290, 670, 420, 42, ''+CF, 700); fitText(x, m.opp, 790, 670, 420, 42, ''+CF, 700);
+    x.textAlign = 'left';
+    const gl = m.lineup.filter(l => l.g).sort((a,b) => b.g - a.g), mvp = m.lineup.find(l => l.mom);
+    x.fillStyle = '#B9AE9C'; x.font = '500 30px '+CB;
+    if (gl.length) fitText(x, 'Goles: ' + gl.map(l => l.name + (l.g > 1 ? ` (${l.g})` : '')).join(', '), 72, 760, 936, 30, CB, 500);
+    if (mvp) { x.fillStyle = '#EAB86F'; x.font = '600 30px '+CB; x.fillText('MVP: ' + mvp.name, 72, 806); }
+    const u = m.us || {}, o = m.them || {};
+    [['Tiros', u.sh, o.sh], ['Pases completados', u.pm, o.pm], ['Entradas ganadas', u.tm, o.tm], ['Nota media', u.rating, o.rating, 1]].forEach(([lab, a, b, d=0], i) => {
+      if (a == null) return;
+      const y = 860 + i * 76; x.fillStyle = '#B9AE9C'; x.font = '500 26px '+CB; x.textAlign = 'center'; x.fillText(lab, 540, y); x.textAlign = 'left';
+      x.font = '800 40px '+CF; x.fillStyle = a > b ? '#EAB86F' : '#F6EFE4'; x.fillText(fmt(a, d), 72, y + 4);
+      x.textAlign = 'right'; x.fillStyle = b > a ? '#EAB86F' : '#F6EFE4'; x.fillText(fmt(b, d), 1008, y + 4); x.textAlign = 'left';
+      const tot = (a || 0) + (b || 0) || 1;
+      x.fillStyle = '#1E1E1E'; rrect(x, 72, y + 20, 460, 8, 4); x.fill(); rrect(x, 548, y + 20, 460, 8, 4); x.fill();
+      x.fillStyle = a >= b ? '#EAB86F' : '#5A5348'; const wa = 460 * (a || 0) / tot; rrect(x, 532 - wa, y + 20, wa, 8, 4); x.fill();
+      x.fillStyle = b > a ? '#EAB86F' : '#5A5348'; rrect(x, 548, y + 20, 460 * (b || 0) / tot, 8, 4); x.fill();
+    });
+    const best = m.lineup.slice(0, 3);
+    best.forEach((l, i) => { const X = 72 + i * 316, Y = 1214;
+      x.fillStyle = RCOL(l.rating); rrect(x, X, Y - 34, 74, 44, 10); x.fill();
+      x.fillStyle = '#0A0A0A'; x.font = '800 30px '+CF; x.textAlign = 'center'; x.fillText(fmt(l.rating, 1), X + 37, Y - 1); x.textAlign = 'left';
+      x.fillStyle = '#F6EFE4'; fitText(x, l.name, X + 88, Y - 2, 210, 30, ''+CF, 700); });
+    cardFoot(x); saveCard(cv, `fusion-partido-${slug(m.opp)}`);
+  }
+  async function cardPlayer(p, axes){
+    const {cv, x} = await cardBase(p.name, `${POSN[p.pos] || p.pos}, ${plural(p.pj, 'partido', 'partidos')} guardados`);
+    x.fillStyle = RCOL(p.rating); rrect(x, 72, 400, 220, 150, 22); x.fill();
+    x.fillStyle = '#0A0A0A'; x.textAlign = 'center'; x.font = '800 120px '+CF; x.fillText(fmt(p.rating, 1), 182, 515);
+    x.fillStyle = '#B9AE9C'; x.font = '500 26px '+CB; x.fillText('nota promedio', 182, 590); x.textAlign = 'left';
+    const cx = 700, cy = 610, R = 160, n = axes.length, pt = (i, r) => [cx + Math.cos(-Math.PI/2 + i*2*Math.PI/n) * r, cy + Math.sin(-Math.PI/2 + i*2*Math.PI/n) * r];
+    x.strokeStyle = '#2A2A2A'; x.lineWidth = 2;
+    [.25,.5,.75,1].forEach(f => { x.beginPath(); axes.forEach((a, i) => { const [X, Y] = pt(i, R * f); i ? x.lineTo(X, Y) : x.moveTo(X, Y); }); x.closePath(); x.stroke(); });
+    x.beginPath(); axes.forEach((a, i) => { const [X, Y] = pt(i, R * Math.max(.04, a.v / 100)); i ? x.lineTo(X, Y) : x.moveTo(X, Y); }); x.closePath();
+    x.fillStyle = 'rgba(234,184,111,.28)'; x.fill(); x.strokeStyle = '#EAB86F'; x.lineWidth = 4; x.stroke();
+    x.textAlign = 'center';
+    axes.forEach((a, i) => { const [X, Y] = pt(i, R + 52); x.fillStyle = '#B9AE9C'; x.font = '600 26px '+CF; x.fillText(a.k, X, Y - 6); x.fillStyle = '#EAB86F'; x.font = '800 30px '+CF; x.fillText(Math.round(a.v), X, Y + 24); });
+    x.textAlign = 'left';
+    [[p.g, 'goles'], [p.a, 'asistencias'], [p.mom, 'veces MVP'], [pct(p.winPct), 'ganados'], [pct(p.passPct), 'pases completados'], [fmt(p.ga90, 2), 'G+A por 90']].forEach(([v, k], i) => {
+      const X = 72 + (i % 3) * 316, Y = 900 + Math.floor(i / 3) * 160;
+      x.fillStyle = '#1E1E1E'; x.fillRect(X, Y - 60, 296, 2);
+      x.fillStyle = '#F6EFE4'; x.font = '800 72px '+CF; x.fillText(String(v), X, Y + 20);
+      x.fillStyle = '#B9AE9C'; x.font = '500 26px '+CB; x.fillText(k, X, Y + 58);
+    });
+    cardFoot(x); saveCard(cv, `fusion-${slug(p.name)}`);
+  }
+
   /* ---------- perfil del jugador ---------- */
   const dlg = $('profile');
   $('pClose').onclick = () => dlg.close();
@@ -1136,7 +1390,7 @@ function boot(S){
     const tname = current === 'Todos' ? 'los partidos guardados' : 'los partidos guardados de ' + TYPES.find(t => t[0] === current)[1].toLowerCase();
     $('pName').textContent = name;
     if (!p) {
-      $('pOvr').textContent = '—'; $('pSub').textContent = `No tiene partidos en ${tname}.`;
+      $('pOvr').textContent = '—'; $('pSub').textContent = `No tiene partidos en ${tname}.`; $('pDl').hidden = true;
       ['pRadar','pStats','pChart','pList'].forEach(id => $(id).textContent = '');
       $('pList').append(el('div','empty','Cambia el filtro a "Todos" o espera a que juegue sus primeros partidos guardados.'));
       dlg.showModal(); return;
@@ -1145,9 +1399,11 @@ function boot(S){
     $('pSub').textContent = `${POSN[p.pos] || p.pos}, ${plural(p.pj,'partido','partidos')} en ${tname}`;
     const pool = P.filter(x => x.min >= 60 || x.name === name);
     const rel = (k, v) => { const mx = Math.max(...pool.map(x => x[k] || 0)); return mx > 0 ? 100 * (v || 0) / mx : 0; };
-    radar($('pRadar'), [
+    const axes = [
       {k:'Gol', v: rel('g90', p.g90)}, {k:'Creación', v: rel('a90', p.a90)}, {k:'Pase', v: rel('pass90', p.pass90)},
-      {k:'Defensa', v: rel('tk90', p.tk90)}, {k:'Influencia', v: rel('rating', p.rating)}]);
+      {k:'Defensa', v: rel('tk90', p.tk90)}, {k:'Influencia', v: rel('rating', p.rating)}];
+    radar($('pRadar'), axes);
+    const pd = $('pDl'); pd.hidden = false; pd.innerHTML = DLICON; pd.append('Tarjeta'); pd.onclick = () => cardPlayer(p, axes);
     const ps = $('pStats'); ps.textContent = '';
     [[p.pj,'partidos'],[p.min,'minutos'],[pct(p.winPct),'ganados'],[p.g,'goles'],[p.a,'asistencias'],[p.mom,'veces MVP'],
      [fmt(p.ga90,2),'G+A por 90'],[pct(p.passPct),'pases completados'],[pct(p.tkPct),'entradas ganadas']]

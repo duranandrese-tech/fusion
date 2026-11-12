@@ -78,7 +78,7 @@ for m in sorted(matches.values(), key=lambda m: m["timestamp"], reverse=True):
         "id": m["matchId"], "ts": m["timestamp"],
         "us": team_stats(CID), "them": team_stats(opp_id),
         "type": m.get("_type") or TYPE_LABEL.get(me.get("matchType"), "Otro"),
-        "opp": (opp.get("details") or {}).get("name", "Rival").strip(),
+        "opp": " ".join(((opp.get("details") or {}).get("name") or "Rival").split()),
         "gf": gf, "ga": ga, "res": res, "dnf": dnf,
         "lineup": lineup,
     })
