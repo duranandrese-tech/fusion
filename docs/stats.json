@@ -1,9 +1,7 @@
 {
- "generatedAt": "2026-11-12T19:42:49+00:00",
+ "generatedAt": "2026-11-12T19:53:57+00:00",
  "club": {
   "clubId": "1497050",
-  "clubName": "Fusion Esports",
-  "platform": "common-gen5",
   "wins": "40",
   "losses": "5",
   "ties": "4",
@@ -13,11 +11,14 @@
   "goalsAgainst": "72",
   "cleanSheets": "13",
   "points": "59",
+  "reputationtier": "0",
   "promotions": "3",
   "relegations": "0",
   "bestDivision": "3",
+  "platform": "common-gen5",
+  "clubName": "Fusion Esports",
   "currentDivision": "6",
-  "stadName": "Gillette Stadium"
+  "stadName": "Gillette Stadiu"
  },
  "summary": {
   "pj": 5,
