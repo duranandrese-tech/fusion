@@ -41,7 +41,13 @@ for m in sorted(matches.values(), key=lambda m: m["timestamp"], reverse=True):
     opp_id = next(c for c in m["clubs"] if c != CID)
     opp = m["clubs"][opp_id]
     gf, ga = num(me["goals"]), num(opp["goals"])
-    res = "G" if me.get("wins") == "1" else "P" if me.get("losses") == "1" else "E"
+    # En amistosos EA no llena wins/losses, así que se decide por el marcador
+    if me.get("winnerByDnf") == "1":
+        res = "G"
+    elif opp.get("winnerByDnf") == "1":
+        res = "P"
+    else:
+        res = "G" if gf > ga else "P" if gf < ga else "E"
     dnf = me.get("winnerByDnf") == "1" or opp.get("winnerByDnf") == "1"
     mtype = m.get("_type") or TYPE_LABEL.get(me.get("matchType"), "Otro")
     scorers, assisters, motm, lineup = [], [], None, []

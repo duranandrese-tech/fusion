@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-12T20:01:32+00:00",
+ "generatedAt": "2026-11-12T20:04:27+00:00",
  "club": {
   "clubId": "1497050",
   "wins": "40",
@@ -389,7 +389,7 @@
    "opp": "CuyaguaJR",
    "gf": 1,
    "ga": 0,
-   "res": "E",
+   "res": "G",
    "dnf": false,
    "motm": null,
    "scorers": [
@@ -491,7 +491,7 @@
    "opp": "DANZ  FC",
    "gf": 3,
    "ga": 0,
-   "res": "E",
+   "res": "G",
    "dnf": false,
    "motm": "DrewNine_",
    "scorers": [],
@@ -539,11 +539,11 @@
   "Todos": {
    "summary": {
     "pj": 7,
-    "G": 4,
+    "G": 6,
     "gf": 25,
     "ga": 15,
     "cs": 3,
-    "E": 3
+    "E": 1
    },
    "players": [
     {
@@ -561,7 +561,7 @@
      "tacklePct": 29,
      "tackles90": 1.94,
      "mom": 1,
-     "wins": 2
+     "wins": 3
     },
     {
      "name": "JorgezxaESP",
@@ -595,7 +595,7 @@
      "tacklePct": 21,
      "tackles90": 1.37,
      "mom": 1,
-     "wins": 4
+     "wins": 5
     },
     {
      "name": "MitruVz-",
@@ -612,7 +612,7 @@
      "tacklePct": 17,
      "tackles90": 0.57,
      "mom": 2,
-     "wins": 4
+     "wins": 6
     },
     {
      "name": "angelgodoy1",
@@ -629,7 +629,7 @@
      "tacklePct": 25,
      "tackles90": 0.97,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "Chyno-r",
@@ -646,7 +646,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "RickiVz-",
@@ -663,7 +663,7 @@
      "tacklePct": 20,
      "tackles90": 0.97,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "MandatedLyrirck_",
@@ -680,7 +680,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "Yeickens",
@@ -697,7 +697,7 @@
      "tacklePct": 25,
      "tackles90": 0.93,
      "mom": 0,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "xMilan14-",
@@ -714,7 +714,7 @@
      "tacklePct": 62,
      "tackles90": 1.2,
      "mom": 0,
-     "wins": 4
+     "wins": 5
     },
     {
      "name": "DrewNine_",
@@ -731,7 +731,7 @@
      "tacklePct": 38,
      "tackles90": 3.41,
      "mom": 1,
-     "wins": 4
+     "wins": 6
     },
     {
      "name": "Kenshin-vz-",
@@ -748,7 +748,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "dusty_heating69",
@@ -765,7 +765,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     }
    ]
   },
@@ -890,7 +890,7 @@
   "Amistoso": {
    "summary": {
     "pj": 2,
-    "E": 2,
+    "G": 2,
     "gf": 4,
     "ga": 0,
     "cs": 2
@@ -911,7 +911,7 @@
      "tacklePct": 25,
      "tackles90": 0.97,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "elpetticua",
@@ -928,7 +928,7 @@
      "tacklePct": 20,
      "tackles90": 0.97,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "HaroldChampion12",
@@ -945,7 +945,7 @@
      "tacklePct": 36,
      "tackles90": 3.87,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "Chyno-r",
@@ -962,7 +962,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "RickiVz-",
@@ -979,7 +979,7 @@
      "tacklePct": 20,
      "tackles90": 0.97,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "MandatedLyrirck_",
@@ -996,7 +996,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "Yeickens",
@@ -1013,7 +1013,7 @@
      "tacklePct": 25,
      "tackles90": 0.93,
      "mom": 0,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "DrewNine_",
@@ -1030,7 +1030,7 @@
      "tacklePct": 0,
      "tackles90": 0.0,
      "mom": 1,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "MitruVz-",
@@ -1047,7 +1047,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "Kenshin-vz-",
@@ -1064,7 +1064,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 2
     },
     {
      "name": "dusty_heating69",
@@ -1081,7 +1081,7 @@
      "tacklePct": null,
      "tackles90": 0.0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     },
     {
      "name": "xMilan14-",
@@ -1098,7 +1098,7 @@
      "tacklePct": null,
      "tackles90": 0,
      "mom": 0,
-     "wins": 0
+     "wins": 1
     }
    ]
   }

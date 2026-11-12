@@ -3,106 +3,216 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2A0A17">
 <title>Fusion Esports — Stats</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0E0A0C; --surface:#1A1216; --surface2:#22171C; --border:#3A2530;
-    --text:#F5EDEF; --muted:#B29BA4; --faint:#7D6670;
-    --accent:#E76D10; --accent-soft:rgba(231,109,16,.14); --wine:#3D0B21;
-    --win:#2BB673; --draw:#C9A227; --loss:#E0464B;
+    --vino:#2A0A17; --vino2:#3D0B21; --vino3:#4C1530; --linea:#5E2540;
+    --crema:#FFF4EC; --rosa:#D9B6C4; --tenue:#A9808F;
+    --naranja:#E76D10; --naranja2:#FF8A2E;
+    --gana:#46D18A; --empata:#F2C14E; --pierde:#FF6B6B;
+    --cond:"Barlow Condensed", "Arial Narrow", sans-serif;
+    --body:Barlow, system-ui, sans-serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
-  .wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
-  h1,h2,.num{font-family:Rajdhani,Inter,sans-serif;letter-spacing:.01em}
-  h2{font-size:22px;margin:36px 0 12px}
-  .hero{background:linear-gradient(135deg,var(--wine) 0%,#1A0F14 70%);border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
-  .crest{width:64px;height:64px;border-radius:14px;background:var(--accent);display:grid;place-items:center;font:700 26px Rajdhani;color:#1A0F14;flex:none}
-  .id{display:flex;gap:16px;align-items:center}
-  .kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
-  h1{font-size:40px;line-height:1;margin:4px 0}
-  .sub{color:var(--muted);font-size:14px}
-  .big{display:flex;gap:28px;flex-wrap:wrap}
-  .big .num{font-size:36px;font-weight:700;color:var(--accent);line-height:1}
-  .big .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-  .tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
-  .tile .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .tile .num{font-size:30px;font-weight:700;margin-top:4px}
-  .tile .note{font-size:12px;color:var(--faint)}
-  .form{display:flex;gap:6px;margin:10px 0 0}
-  .pill{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 13px Inter;color:#0E0A0C}
-  .G{background:var(--win)} .E{background:var(--draw)} .P{background:var(--loss)}
-  .matches{display:grid;gap:10px}
-  .match{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-  .match summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 16px}
-  .match summary::-webkit-details-marker{display:none}
-  .score{font:700 24px Rajdhani;white-space:nowrap}
-  .opp{font-weight:600}
-  .meta{font-size:12px;color:var(--muted)}
-  .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-left:6px;font-weight:600}
-  .lineup{border-top:1px solid var(--border);padding:10px 16px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px 18px;font-size:13px}
-  .lineup div{display:flex;justify-content:space-between;gap:8px}
+  html{background:var(--vino)}
+  body{margin:0;color:var(--crema);font:16px/1.5 var(--body);
+       background:radial-gradient(120% 60% at 100% 0%, #4A1029 0%, transparent 60%), var(--vino);min-height:100vh}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 18px 64px}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--naranja2);outline-offset:2px;border-radius:4px}
+
+  /* Top */
+  .top{display:flex;align-items:center;gap:12px}
+  .crest{width:44px;height:44px;border-radius:10px;background:var(--naranja);color:var(--vino);
+         display:grid;place-items:center;font:800 22px/1 var(--cond);transform:rotate(-4deg)}
+  .club{font:800 28px/1 var(--cond);letter-spacing:.01em}
+  .clubmeta{color:var(--rosa);font-size:14px}
+
+  /* Scoreboard hero */
+  .board{position:relative;overflow:hidden;margin-top:18px;border-radius:18px;background:var(--vino2);
+         border:1px solid var(--linea);padding:22px 24px 20px}
+  .board::before{content:"";position:absolute;inset:-40% auto -40% calc(50% - 70px);width:140px;background:var(--naranja);
+         transform:rotate(18deg);opacity:.9}
+  .board::after{content:"";position:absolute;inset:-40% auto -40% calc(50% + 84px);width:18px;background:var(--naranja);
+         transform:rotate(18deg);opacity:.55}
+  .board > *{position:relative;z-index:1}
+  .boardhead{display:flex;justify-content:space-between;gap:10px;color:var(--rosa);font-size:14px}
+  .scoreline{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin:10px 0 6px}
+  .team{font:600 clamp(20px,3.4vw,30px)/1.05 var(--cond)}
+  .team.away{text-align:right}
+  .goals{font:800 clamp(64px,13vw,128px)/.9 var(--cond);letter-spacing:-.02em;display:flex;gap:.18em;align-items:baseline;
+         text-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .goals .sep{color:var(--rosa);font-weight:500;font-size:.5em;transform:translateY(-.25em)}
+  .verdict{display:inline-block;font:600 15px/1 var(--cond);letter-spacing:.04em;padding:6px 10px;border-radius:6px;color:var(--vino)}
+  .verdict.G{background:var(--gana)} .verdict.E{background:var(--empata)} .verdict.P{background:var(--pierde)}
+  .scorers{color:var(--rosa);font-size:14px;margin-top:6px}
+  .scorers b{color:var(--crema);font-weight:600}
+  .boardfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:18px;
+             padding-top:16px;border-top:1px solid rgba(255,244,236,.12)}
+  .form{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{min-width:44px;padding:5px 6px 4px;border-radius:7px;text-align:center;color:var(--vino);font:600 15px/1 var(--cond)}
+  .chip small{display:block;font:500 11px/1.2 var(--body);opacity:.75;margin-top:2px}
+  .chip.G{background:var(--gana)} .chip.E{background:var(--empata)} .chip.P{background:var(--pierde)}
+  .alltime{text-align:right}
+  .alltime .big{font:800 34px/1 var(--cond)}
+  .alltime .small{color:var(--rosa);font-size:13px}
+
+  /* Filter */
+  .filter{display:flex;gap:4px;padding:4px;background:var(--vino2);border:1px solid var(--linea);border-radius:12px;
+          width:max-content;max-width:100%;overflow-x:auto;margin:28px 0 8px;position:sticky;top:8px;z-index:5}
+  .filter button{border:0;background:transparent;padding:8px 14px;border-radius:9px;cursor:pointer;font:600 17px/1 var(--cond);
+                 color:var(--rosa);white-space:nowrap}
+  .filter button[aria-pressed="true"]{background:var(--naranja);color:var(--vino)}
+  .filter button:disabled{opacity:.4;cursor:default}
+  .filter .n{font:500 12px var(--body);margin-left:4px;opacity:.8}
+
+  h2{font:800 30px/1.1 var(--cond);margin:40px 0 4px;letter-spacing:.005em}
+  .lede{color:var(--rosa);font-size:14px;margin:0 0 14px;max-width:70ch}
+
+  /* Summary strip */
+  .strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--naranja);border-bottom:1px solid var(--linea)}
+  .strip > div{padding:14px 16px 12px}
+  .strip > div+div{border-left:1px solid var(--linea)}
+  .strip .v{font:800 38px/1 var(--cond)}
+  .strip .k{color:var(--rosa);font-size:13px;margin-top:4px}
+
+  /* Fixtures */
+  .fixtures{border-top:1px solid var(--linea)}
+  .fx{border-bottom:1px solid var(--linea)}
+  .fx summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:86px 30px 1fr auto auto;gap:12px;align-items:center;padding:12px 4px}
+  .fx summary::-webkit-details-marker{display:none}
+  .fx summary:hover{background:rgba(255,244,236,.03)}
+  .fx .date{color:var(--rosa);font-size:13px;line-height:1.25}
+  .dot{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font:700 14px var(--cond);color:var(--vino)}
+  .dot.G{background:var(--gana)} .dot.E{background:var(--empata)} .dot.P{background:var(--pierde)}
+  .fx .rival{font-weight:600}
+  .fx .who{color:var(--rosa);font-size:13px}
+  .tag{font:600 13px/1 var(--cond);letter-spacing:.03em;padding:4px 8px;border-radius:5px;background:var(--vino3);color:var(--rosa)}
+  .tag.dnf{background:rgba(231,109,16,.18);color:var(--naranja2)}
+  .fx .sc{font:800 26px/1 var(--cond);min-width:62px;text-align:right}
+  .lineup{padding:4px 4px 14px 128px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 24px;font-size:14px}
+  .lineup div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed rgba(255,244,236,.08)}
   .lineup .r{font-weight:600}
-  .hi{color:var(--accent)}
-  .leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-  .leader .who{font-weight:600;font-size:16px;margin-top:2px;overflow-wrap:anywhere}
-  .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
-  table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
-  th,td{padding:10px 12px;text-align:right;white-space:nowrap}
-  th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
-  th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
-  th.sorted{color:var(--accent)}
-  tbody tr+tr td{border-top:1px solid #2A1C22}
+  .lineup .mvp{color:var(--naranja2)}
+  .pos{font:600 12px var(--cond);color:var(--tenue);margin-left:6px;letter-spacing:.04em}
+
+  /* Leaders */
+  .leaders{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--naranja)}
+  .leader{padding:14px 16px;border-bottom:1px solid var(--linea)}
+  .leader:not(:nth-child(3n+1)){border-left:1px solid var(--linea)}
+  .leader .k{color:var(--rosa);font-size:13px}
+  .leader .name{font:800 24px/1.1 var(--cond);margin:2px 0;overflow-wrap:anywhere}
+  .leader .v{font-size:14px}
+  .leader .v b{color:var(--naranja2);font:800 20px var(--cond)}
+
+  /* Tables */
+  .tw{overflow-x:auto;border-top:2px solid var(--naranja)}
+  table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px;font-variant-numeric:tabular-nums}
+  th,td{padding:10px 10px;text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--vino)}
+  th{font:600 14px var(--cond);letter-spacing:.03em;color:var(--rosa);border-bottom:1px solid var(--linea);cursor:pointer;user-select:none}
+  th[aria-sort]{color:var(--naranja2)}
+  th[aria-sort="descending"]::after{content:" ▾"} th[aria-sort="ascending"]::after{content:" ▴"}
+  tbody tr{border-bottom:1px solid rgba(94,37,64,.6)}
+  tbody tr:hover td{background:rgba(255,244,236,.03)}
   td.name{font-weight:600}
-  .posb{font-size:11px;color:var(--muted);margin-left:6px;font-weight:500}
-  .bar{display:inline-block;height:6px;border-radius:3px;background:var(--accent);vertical-align:middle;margin-left:8px;opacity:.85}
-  .notes{color:var(--muted);font-size:13px;line-height:1.6}
-  .notes li{margin-bottom:4px}
-  footer{margin-top:32px;color:var(--faint);font-size:12px}
-  @media (max-width:560px){h1{font-size:32px}.big .num{font-size:28px}.match summary{grid-template-columns:auto 1fr;}.match summary .score{grid-column:1/-1;order:-1}}
+  .meter{display:inline-block;width:46px;height:5px;border-radius:3px;background:var(--vino3);margin-left:8px;vertical-align:middle;position:relative;overflow:hidden}
+  .meter i{position:absolute;inset:0 auto 0 0;background:var(--naranja)}
+  .empty{color:var(--rosa);padding:18px 4px;border-bottom:1px solid var(--linea)}
+
+  .history{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--naranja);border-bottom:1px solid var(--linea)}
+  .history > div{padding:14px 16px}
+  .history > div+div{border-left:1px solid var(--linea)}
+  .history .v{font:800 30px/1 var(--cond)}
+  .history .k{color:var(--rosa);font-size:13px;margin-top:4px}
+
+  details.notes{margin-top:40px;color:var(--rosa);font-size:14px}
+  details.notes summary{cursor:pointer;font:600 18px var(--cond);color:var(--crema)}
+  details.notes li{margin:6px 0;max-width:75ch}
+  footer{margin-top:28px;color:var(--tenue);font-size:13px}
+
+  @media (max-width:720px){
+    .strip,.history{grid-template-columns:repeat(2,1fr)}
+    .strip > div:nth-child(3),.history > div:nth-child(3){border-left:0}
+    .strip > div:nth-child(n+3),.history > div:nth-child(n+3){border-top:1px solid var(--linea)}
+    .leaders{grid-template-columns:1fr 1fr}
+    .leader:not(:nth-child(3n+1)){border-left:0}
+    .leader:nth-child(even){border-left:1px solid var(--linea)}
+    .fx summary{grid-template-columns:30px 1fr auto;row-gap:2px}
+    .fx .date{grid-column:2/4;order:3}
+    .fx .tagcell{display:none}
+    .lineup{padding-left:46px}
+    .board::before{width:90px;left:calc(50% - 45px);bottom:62%} .board::after{left:calc(50% + 56px);bottom:62%}
+    .team{font-size:17px}
+    .alltime{text-align:left}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .board .goals{animation:pop .5s cubic-bezier(.2,.9,.3,1.2) both}
+    @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <section class="hero" id="hero">
-    <div class="id">
-      <div class="crest">FE</div>
-      <div>
-        <div class="kicker">Estadísticas de Pro Clubs · PS5</div>
-        <h1 id="clubName"></h1>
-        <div class="sub" id="clubSub"></div>
-      </div>
+  <header class="top">
+    <div class="crest" aria-hidden="true">FE</div>
+    <div>
+      <div class="club" id="clubName">Fusion Esports</div>
+      <div class="clubmeta" id="clubMeta">Pro Clubs en PS5</div>
     </div>
-    <div class="big">
-      <div><div class="num" id="winPct"></div><div class="lbl">% victorias histórico</div></div>
-      <div><div class="num" id="record"></div><div class="lbl">Récord G-E-P</div></div>
+  </header>
+
+  <section class="board" id="board" aria-label="Último partido">
+    <div class="boardhead"><span id="lastWhen">Cargando…</span><span id="lastType"></span></div>
+    <div class="scoreline">
+      <div class="team" id="homeName">Fusion Esports</div>
+      <div class="goals" id="lastScore"></div>
+      <div class="team away" id="awayName"></div>
+    </div>
+    <div><span class="verdict" id="lastVerdict"></span></div>
+    <div class="scorers" id="lastScorers"></div>
+    <div class="boardfoot">
+      <div>
+        <div class="clubmeta" style="margin-bottom:6px">Últimos partidos, del más reciente al más viejo</div>
+        <div class="form" id="form"></div>
+      </div>
+      <div class="alltime">
+        <div class="big" id="allRecord"></div>
+        <div class="small" id="allRecordNote"></div>
+      </div>
     </div>
   </section>
 
-  <h2>Líderes de la temporada</h2>
+  <nav class="filter" id="filter" aria-label="Tipo de partido"></nav>
+
+  <h2>Resumen</h2>
+  <p class="lede" id="summaryLede"></p>
+  <div class="strip" id="strip"></div>
+
+  <h2>Partidos</h2>
+  <p class="lede">Toca un partido para ver la nota de cada jugador.</p>
+  <div class="fixtures" id="fixtures"></div>
+
+  <h2>Jugadores</h2>
+  <p class="lede">Stats en los partidos guardados. “/90” es por cada 90 minutos jugados. Toca una columna para ordenar.</p>
+  <div class="tw"><table id="players"><thead></thead><tbody></tbody></table></div>
+
+  <h2>Temporada</h2>
+  <p class="lede">Lo que EA tiene de cada miembro del club en toda la temporada, en todos los partidos.</p>
   <div class="leaders" id="leaders"></div>
+  <div class="tw" style="margin-top:22px"><table id="season"><thead></thead><tbody></tbody></table></div>
 
-  <h2>Plantilla · temporada completa</h2>
-  <p class="sub" style="margin-top:-6px">Todos los partidos de cada jugador con el club. Toca una columna para ordenar.</p>
-  <div class="tablewrap"><table id="season"><thead></thead><tbody></tbody></table></div>
+  <h2>Histórico en liga</h2>
+  <div class="history" id="history"></div>
 
-  <h2 id="recent-title">Últimos partidos</h2>
-  <div class="tiles" id="recentTiles"></div>
-  <div class="form" id="form" aria-label="Forma reciente"></div>
-  <div class="matches" id="matches" style="margin-top:14px"></div>
-
-  <h2>Jugadores en los últimos partidos</h2>
-  <p class="sub" style="margin-top:-6px">“/90” es por cada 90 minutos jugados.</p>
-  <div class="tablewrap"><table id="players"><thead></thead><tbody></tbody></table></div>
-
-  <h2>Histórico del club</h2>
-  <div class="tiles" id="allTime"></div>
-
-  <h2>Cómo leer esto</h2>
-  <ul class="notes" id="notes"></ul>
+  <details class="notes">
+    <summary>Cómo se calculan estas stats</summary>
+    <ul id="notes"></ul>
+  </details>
 
   <footer id="footer"></footer>
 </div>
@@ -111,125 +221,178 @@
 <script>
 (function(){
   const raw = document.getElementById('stats').textContent.trim();
-  if (raw && raw !== '__STATS__') { render(JSON.parse(raw)); }
-  else {
-    fetch('stats.json?t=' + Date.now(), {cache: 'no-store'})
-      .then(r => r.json()).then(render)
-      .catch(() => { document.getElementById('clubName').textContent = 'No se pudieron cargar las stats'; });
-    setTimeout(() => location.reload(), 10 * 60 * 1000); // se refresca solo cada 10 min
-  }
+  if (raw && raw.charAt(0) === '{') { render(JSON.parse(raw)); return; }
+  fetch('stats.json?t=' + Date.now(), {cache:'no-store'})
+    .then(r => r.json()).then(render)
+    .catch(() => { document.getElementById('lastWhen').textContent = 'No se pudieron cargar las stats. Recarga la página en un rato.'; });
+  setTimeout(() => location.reload(), 10 * 60 * 1000);
 })();
 
 function render(S){
   const $ = id => document.getElementById(id);
-  const el = (tag, cls, text) => { const e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; };
-  const fmt = (v,d=0) => v==null ? '—' : Number(v).toLocaleString('es',{minimumFractionDigits:d,maximumFractionDigits:d});
-  const c = S.club;
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const fmt = (v, d=0) => v == null || isNaN(v) ? '—' : Number(v).toLocaleString('es', {minimumFractionDigits:d, maximumFractionDigits:d});
+  const plural = (n, a, b) => `${n} ${n === 1 ? a : b}`;
+  const c = S.club, W = +c.wins, T = +c.ties, L = +c.losses, GP = +c.gamesPlayed;
+  const RES = {G:'Ganamos', E:'Empate', P:'Perdimos'};
+  const TYPES = [['Todos','Todos'],['Liga','Liga'],['Playoff','Playoffs'],['Amistoso','Amistosos']];
+  const day = ts => new Date(ts*1000).toLocaleDateString('es', {weekday:'short', day:'numeric', month:'short'});
+  const time = ts => new Date(ts*1000).toLocaleTimeString('es', {hour:'2-digit', minute:'2-digit'});
 
-  // Hero
-  const W=+c.wins, T=+c.ties, L=+c.losses, GP=+c.gamesPlayed;
   $('clubName').textContent = c.clubName;
-  $('clubSub').textContent = `División ${c.currentDivision} · ${c.stadName || ''} · ${GP} partidos de liga`;
-  $('winPct').textContent = fmt(100*W/GP,1)+'%';
-  $('record').textContent = `${W}-${T}-${L}`;
+  $('clubMeta').textContent = `Pro Clubs en PS5, División ${c.currentDivision}`;
 
-  // Recent tiles
-  const s=S.summary, n=s.pj||0;
-  const tiles=[
-    ['Récord', `${s.G||0}-${s.E||0}-${s.P||0}`, `en ${n} partidos guardados`],
-    ['Goles', `${s.gf||0} : ${s.ga||0}`, `${fmt((s.gf||0)/n,1)} a favor por partido`],
-    ['Diferencia', ((s.gf-s.ga)>0?'+':'')+(s.gf-s.ga), 'goles a favor menos en contra'],
-    ['Vallas invictas', s.cs||0, `de ${n}`],
-  ];
-  tiles.forEach(([l,v,nt])=>{const t=el('div','tile');t.append(el('div','lbl',l),el('div','num',v),el('div','note',nt));$('recentTiles').append(t);});
+  // Último partido
+  const last = S.matches[0];
+  if (last) {
+    $('lastWhen').textContent = `${day(last.ts)}, ${time(last.ts)}`;
+    $('lastType').textContent = last.type + (last.dnf ? ', el rival abandonó' : '');
+    $('homeName').textContent = c.clubName;
+    $('awayName').textContent = last.opp;
+    const g = $('lastScore'); g.textContent = '';
+    g.append(el('span', null, last.gf), el('span', 'sep', '–'), el('span', null, last.ga));
+    const v = $('lastVerdict'); v.textContent = RES[last.res]; v.className = 'verdict ' + last.res;
+    const sc = $('lastScorers'); sc.textContent = '';
+    if (last.scorers.length) {
+      sc.append('Goles: ');
+      last.scorers.forEach((s, i) => { if (i) sc.append(', '); sc.append(el('b', null, s.name + (s.n > 1 ? ` (${s.n})` : ''))); });
+    }
+    if (last.motm) { sc.append(sc.childNodes.length ? '. MVP: ' : 'MVP: '); sc.append(el('b', null, last.motm)); }
+  }
+  S.matches.slice(0, 10).forEach(m => {
+    const ch = el('div', 'chip ' + m.res, `${m.gf}-${m.ga}`); ch.title = `${RES[m.res]} contra ${m.opp} (${m.type})`;
+    ch.append(el('small', null, m.type === 'Amistoso' ? 'amist.' : m.type.toLowerCase()));
+    $('form').append(ch);
+  });
+  $('allRecord').textContent = `${W}-${T}-${L}`;
+  $('allRecordNote').textContent = `ganados, empatados y perdidos en liga, ${fmt(100*W/GP,0)}% de victorias`;
 
-  // Form (oldest -> newest left to right reads naturally; show newest first like most apps)
-  S.matches.forEach(m=>{const p=el('div','pill '+m.res,m.res);p.title=`${m.gf}-${m.ga} vs ${m.opp}`;$('form').append(p);});
-
-  // Matches
-  const dt = ts => new Date(ts*1000).toLocaleString('es',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-  S.matches.forEach(m=>{
-    const d=el('details','match'); const sm=el('summary');
-    const pill=el('div','pill '+m.res,m.res);
-    const mid=el('div'); const o=el('div','opp','vs '+m.opp);
-    if(m.dnf) o.append(el('span','tag','Rival abandonó'));
-    const parts=[dt(m.ts), m.type];
-    if(m.scorers.length) parts.push('⚽ '+m.scorers.map(x=>x.name+(x.n>1?' ×'+x.n:'')).join(', '));
-    if(m.motm) parts.push('MVP: '+m.motm);
-    mid.append(o, el('div','meta',parts.join(' · ')));
-    sm.append(pill, mid, el('div','score',`${m.gf} – ${m.ga}`));
-    d.append(sm);
-    const lu=el('div','lineup');
-    m.lineup.forEach(p=>{const r=el('div');const left=el('span',null,`${p.name} `);left.append(el('span','posb',p.pos));
-      const extra=[p.g?`${p.g}G`:'',p.a?`${p.a}A`:''].filter(Boolean).join(' ');
-      const right=el('span','r'+(p.name===m.motm?' hi':''),(extra?extra+' · ':'')+fmt(p.rating,1));
-      r.append(left,right);lu.append(r);});
-    d.append(lu); $('matches').append(d);
+  // Filtro
+  let current = 'Todos';
+  const counts = {Todos: S.matches.length};
+  S.matches.forEach(m => counts[m.type] = (counts[m.type] || 0) + 1);
+  TYPES.forEach(([key, label]) => {
+    const b = el('button', null, label); b.type = 'button';
+    b.append(el('span', 'n', counts[key] || 0));
+    b.disabled = !counts[key];
+    b.setAttribute('aria-pressed', key === current);
+    b.onclick = () => { current = key; [...$('filter').children].forEach(x => x.setAttribute('aria-pressed', x === b)); update(); };
+    $('filter').append(b);
   });
 
-  // Generic sortable table
-  function table(id, rows, cols, initKey){
-    let sortKey=initKey, dir=-1;
-    const tb=$(id), hr=el('tr'), body=tb.tBodies[0];
-    cols.forEach(([k,l])=>{const th=el('th',null,l);th.dataset.k=k;th.onclick=()=>{dir=(sortKey===k)?-dir:(k==='name'?1:-1);sortKey=k;render();};hr.append(th);});
-    tb.tHead.append(hr);
-    const maxR=Math.max(...rows.map(p=>p.rating||0));
-    function render(){
-      [...hr.children].forEach(th=>th.classList.toggle('sorted',th.dataset.k===sortKey));
-      body.textContent='';
-      rows.slice().sort((a,b)=>{const x=a[sortKey],y=b[sortKey];if(typeof x==='string')return dir*x.localeCompare(y);return dir*((x??-1)-(y??-1));})
-       .forEach(p=>{const tr=el('tr');cols.forEach(([k,,d])=>{
-          let td;
-          if(k==='name'){td=el('td','name',p.name);td.append(el('span','posb',p.pos));}
-          else if(k==='rating'){td=el('td',null,fmt(p.rating,d));const b=el('span','bar');b.style.width=Math.round(40*p.rating/maxR)+'px';td.append(b);}
-          else if(k.endsWith('Pct')){td=el('td',null,p[k]==null?'—':p[k]+'%');}
-          else td=el('td',null,fmt(p[k],d));
-          tr.append(td);});body.append(tr);});
+  // Tabla ordenable
+  function makeTable(id, cols, initKey){
+    const tb = $(id), head = el('tr'); let key = initKey, dir = -1, rows = [];
+    cols.forEach(([k, label]) => {
+      const th = el('th', null, label); th.scope = 'col'; th.tabIndex = 0;
+      const go = () => { dir = key === k ? -dir : (k === 'name' ? 1 : -1); key = k; draw(); };
+      th.onclick = go; th.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+      head.append(th);
+    });
+    tb.tHead.append(head);
+    function draw(){
+      [...head.children].forEach((th, i) => cols[i][0] === key ? th.setAttribute('aria-sort', dir < 0 ? 'descending' : 'ascending') : th.removeAttribute('aria-sort'));
+      const body = tb.tBodies[0]; body.textContent = '';
+      if (!rows.length) { const tr = el('tr'), td = el('td', 'empty', 'No hay partidos de este tipo guardados todavía.'); td.colSpan = cols.length; tr.append(td); body.append(tr); return; }
+      const maxR = Math.max(...rows.map(p => p.rating || 0)) || 1;
+      rows.slice().sort((a, b) => { const x = a[key], y = b[key]; return typeof x === 'string' ? dir * x.localeCompare(y) : dir * ((x ?? -1) - (y ?? -1)); })
+        .forEach(p => {
+          const tr = el('tr');
+          cols.forEach(([k, , d]) => {
+            let td;
+            if (k === 'name') { td = el('td', 'name', p.name); td.append(el('span', 'pos', p.pos)); }
+            else if (k === 'rating') { td = el('td', null, fmt(p.rating, d)); const m = el('span', 'meter'), i = el('i'); i.style.width = (100 * p.rating / maxR) + '%'; m.append(i); td.append(m); }
+            else if (/Pct$/.test(k)) td = el('td', null, p[k] == null ? '—' : p[k] + '%');
+            else td = el('td', null, fmt(p[k], d));
+            tr.append(td);
+          });
+          body.append(tr);
+        });
     }
-    render();
+    return { set(r){ rows = r; draw(); } };
   }
 
-  // Season (members/stats)
-  const POS={goalkeeper:'POR',defender:'DEF',midfielder:'MED',forward:'DEL'};
-  const M=((S.members&&S.members.members)||[]).filter(m=>+m.gamesPlayed>0).map(m=>({
-    name:m.name,pos:POS[m.favoritePosition]||'',pj:+m.gamesPlayed,winPct:+m.winRate,g:+m.goals,a:+m.assists,
-    gapj:(+m.goals + +m.assists)/+m.gamesPlayed,rating:+m.ratingAve,passPct:+m.passSuccessRate,shotPct:+m.shotSuccessRate,
-    tacklePct:+m.tackleSuccessRate,mom:+m.manOfTheMatch,ovr:+m.proOverall,red:+m.redCards}));
-  const reg=M.filter(p=>p.pj>=10);
-  const top=(arr,key)=>arr.slice().sort((a,b)=>b[key]-a[key])[0];
-  [['Goleador',M,'g',p=>`${p.g} goles en ${p.pj} partidos`],
-   ['Asistidor',M,'a',p=>`${p.a} asistencias en ${p.pj} partidos`],
-   ['Mejor nota',reg,'rating',p=>`${fmt(p.rating,1)} de promedio (mín. 10 PJ)`],
-   ['Más MVP',M,'mom',p=>`${p.mom} veces MVP`],
-   ['Más G+A por partido',reg,'gapj',p=>`${fmt(p.gapj,2)} por partido (mín. 10 PJ)`],
-   ['Más partidos',M,'pj',p=>`${p.pj} partidos · ${p.winPct}% ganados`]]
-  .forEach(([l,arr,k,f])=>{const p=top(arr,k);if(!p)return;const t=el('div','tile leader');t.append(el('div','lbl',l),el('div','who',p.name),el('div','note',f(p)));$('leaders').append(t);});
-  table('season',M,[['name','Jugador'],['pj','PJ',0],['winPct','% gana',0],['g','Goles',0],['a','Asist.',0],['gapj','G+A /PJ',2],
-    ['rating','Nota',1],['shotPct','% tiros',0],['passPct','% pases',0],['tacklePct','% entradas',0],['mom','MVP',0],['ovr','Media',0]],'pj');
-
-  // Recent players
-  const P=S.players;
-  table('players',P,[
-    ['name','Jugador',0],['pj','PJ',0],['min','Min',0],['rating','Nota',2],['g','Goles',0],['a','Asist.',0],
+  const playersT = makeTable('players', [
+    ['name','Jugador'],['pj','PJ',0],['min','Min',0],['rating','Nota',2],['g','Goles',0],['a','Asist.',0],
     ['ga90','G+A /90',2],['shots','Tiros',0],['passPct','% pases',0],['pass90','Pases /90',1],
-    ['tacklePct','% entradas',0],['tackles90','Entradas /90',1],['mom','MVP',0]],'rating');
+    ['tacklePct','% entradas',0],['tackles90','Entradas /90',1],['mom','MVP',0]], 'rating');
 
-  // All-time
-  [['Partidos de liga',GP,`${c.gamesPlayedPlayoff} de playoff aparte`],['Goles',`${c.goals} : ${c.goalsAgainst}`,`${fmt(c.goals/GP,1)} por partido`],
-   ['Vallas invictas',c.cleanSheets,`${fmt(100*c.cleanSheets/GP,0)}% de los partidos`],['División',c.currentDivision,`Mejor: ${c.bestDivision} · ${c.promotions} ascensos`]]
-  .forEach(([l,v,nt])=>{const t=el('div','tile');t.append(el('div','lbl',l),el('div','num',v),el('div','note',nt));$('allTime').append(t);});
+  function update(){
+    const bt = S.byType[current] || {summary:{}, players:[]};
+    const s = bt.summary, n = s.pj || 0;
+    $('summaryLede').textContent = n ? `${plural(n,'partido guardado','partidos guardados')}${current === 'Todos' ? '' : ' de ' + TYPES.find(t => t[0] === current)[1].toLowerCase()}.` : 'Todavía no hay partidos de este tipo.';
+    const strip = $('strip'); strip.textContent = '';
+    [[`${s.G||0}-${s.E||0}-${s.P||0}`, 'ganados, empatados, perdidos'],
+     [`${s.gf||0}:${s.ga||0}`, 'goles a favor y en contra'],
+     [((s.gf||0)-(s.ga||0) > 0 ? '+' : '') + ((s.gf||0)-(s.ga||0)), 'diferencia de goles'],
+     [s.cs||0, 'partidos sin recibir gol']]
+     .forEach(([v,k]) => { const d = el('div'); d.append(el('div','v',v), el('div','k',k)); strip.append(d); });
 
-  // Notes
-  [
-    `“Últimos partidos” y la tabla de jugadores usan los ${n} partidos de liga guardados. EA solo muestra los más recientes; cuando se actualice solo, el historial se va a ir acumulando.`,
-    'Solo aparecen los jugadores humanos. Los de la IA no salen en los datos de EA.',
-    'Las stats por 90 se calculan con los minutos que jugó cada uno; con pocos partidos se mueven mucho.',
-    '“Rival abandonó”: el partido terminó antes y EA se lo dio por ganado a Fusion.',
-    '“Histórico del club” es el resumen que da EA de toda la temporada en liga.',
-    '“Plantilla” cuenta todos los partidos de cada jugador con el club (no solo liga), por eso hay jugadores con más partidos que el club en liga. xMilan14- juega con ustedes pero no sale ahí: EA solo lista a los miembros del club.'
-  ].forEach(t=>$('notes').append(el('li',null,t)));
+    const fx = $('fixtures'); fx.textContent = '';
+    const list = S.matches.filter(m => current === 'Todos' || m.type === current);
+    if (!list.length) fx.append(el('div','empty','No hay partidos de este tipo guardados todavía.'));
+    list.forEach(m => {
+      const d = el('details','fx'), sm = el('summary');
+      const date = el('div','date'); date.append(day(m.ts), el('br'), time(m.ts));
+      const mid = el('div'); mid.append(el('div','rival', m.opp));
+      const who = []; if (m.scorers.length) who.push('Goles: ' + m.scorers.map(s => s.name + (s.n > 1 ? ` (${s.n})` : '')).join(', '));
+      if (m.motm) who.push('MVP: ' + m.motm);
+      if (who.length) mid.append(el('div','who', who.join('. ')));
+      const tagc = el('div','tagcell'); tagc.append(el('span','tag', m.type)); if (m.dnf) { tagc.append(' '); tagc.append(el('span','tag dnf','Rival abandonó')); }
+      sm.append(date, el('div','dot '+m.res, m.res), mid, tagc, el('div','sc', `${m.gf}-${m.ga}`));
+      d.append(sm);
+      const lu = el('div','lineup');
+      m.lineup.forEach(p => {
+        const r = el('div'), left = el('span', null, p.name); left.append(el('span','pos',p.pos));
+        const extra = [p.g ? `${p.g} G` : '', p.a ? `${p.a} A` : ''].filter(Boolean).join(', ');
+        r.append(left, el('span', 'r' + (p.name === m.motm ? ' mvp' : ''), (extra ? extra + '   ' : '') + fmt(p.rating,1) + (p.name === m.motm ? ' MVP' : '')));
+        lu.append(r);
+      });
+      d.append(lu); fx.append(d);
+    });
+    playersT.set(bt.players);
+  }
+  update();
 
-  $('footer').textContent = `Datos de la API de Clubes de EA · actualizado ${new Date(S.generatedAt).toLocaleString('es',{dateStyle:'medium',timeStyle:'short'})} · No afiliado con EA Sports`;
+  // Temporada
+  const POS = {goalkeeper:'POR', defender:'DEF', midfielder:'MED', forward:'DEL'};
+  const M = ((S.members && S.members.members) || []).filter(m => +m.gamesPlayed > 0).map(m => ({
+    name:m.name, pos:POS[m.favoritePosition] || '', pj:+m.gamesPlayed, winPct:+m.winRate, g:+m.goals, a:+m.assists,
+    gapj:(+m.goals + +m.assists) / +m.gamesPlayed, rating:+m.ratingAve, passPct:+m.passSuccessRate, shotPct:+m.shotSuccessRate,
+    tacklePct:+m.tackleSuccessRate, mom:+m.manOfTheMatch, ovr:+m.proOverall }));
+  const reg = M.filter(p => p.pj >= 10);
+  const top = (arr, k) => arr.slice().sort((a, b) => b[k] - a[k])[0];
+  [['Goleador', M, 'g', p => [p.g, ` goles en ${p.pj} partidos`]],
+   ['Asistidor', M, 'a', p => [p.a, ` asistencias en ${p.pj} partidos`]],
+   ['Más MVP', M, 'mom', p => [p.mom, ' veces MVP']],
+   ['Mejor nota', reg, 'rating', p => [fmt(p.rating,1), ' de promedio, con 10 o más partidos']],
+   ['Más goles + asistencias', reg, 'gapj', p => [fmt(p.gapj,2), ' por partido, con 10 o más partidos']],
+   ['El que más juega', M, 'pj', p => [p.pj, ` partidos, ${p.winPct}% ganados`]]]
+  .forEach(([k, arr, key, f]) => {
+    const p = top(arr, key); if (!p) return;
+    const [big, rest] = f(p), box = el('div','leader'), v = el('div','v');
+    v.append(el('b', null, big), rest);
+    box.append(el('div','k',k), el('div','name',p.name), v); $('leaders').append(box);
+  });
+  makeTable('season', [['name','Jugador'],['pj','PJ',0],['winPct','% gana',0],['g','Goles',0],['a','Asist.',0],['gapj','G+A /PJ',2],
+    ['rating','Nota',1],['shotPct','% tiros',0],['passPct','% pases',0],['tacklePct','% entradas',0],['mom','MVP',0],['ovr','Media',0]], 'pj').set(M);
+
+  // Histórico
+  [[GP, `partidos de liga, más ${c.gamesPlayedPlayoff} de playoff`],
+   [`${c.goals}:${c.goalsAgainst}`, `goles, ${fmt(c.goals/GP,1)} por partido`],
+   [c.cleanSheets, `sin recibir gol, ${fmt(100*c.cleanSheets/GP,0)}% de los partidos`],
+   [c.currentDivision, `división actual; la mejor fue la ${c.bestDivision}`]]
+   .forEach(([v,k]) => { const d = el('div'); d.append(el('div','v',v), el('div','k',k)); $('history').append(d); });
+
+  [`Los partidos, el resumen y la tabla de jugadores usan los partidos guardados. EA solo muestra los más recientes, así que el historial empieza el día que se montó esta web y crece con cada partido.`,
+   'Solo salen los jugadores humanos. Los de la IA no aparecen en los datos de EA.',
+   'En amistosos el resultado se toma del marcador, porque EA no los cuenta como ganados o perdidos.',
+   '“Rival abandonó” quiere decir que el partido terminó antes y EA se lo dio a uno de los dos equipos.',
+   'Las stats por 90 minutos se mueven mucho cuando alguien tiene pocos partidos.',
+   '“Temporada” son los números que EA guarda de cada miembro del club. Quien juega con ustedes sin ser miembro, como xMilan14-, no sale ahí.']
+   .forEach(t => $('notes').append(el('li', null, t)));
+
+  $('footer').textContent = `Datos de la API de Clubes de EA, actualizados el ${new Date(S.generatedAt).toLocaleString('es', {dateStyle:'medium', timeStyle:'short'})}. No afiliado con EA Sports.`;
 }
 </script>
 </body>
