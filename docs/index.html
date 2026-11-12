@@ -377,6 +377,51 @@
   .crow2.few{opacity:.45}
   .crow2.best .cv{color:var(--gold)}
 
+  /* Tendencias */
+  .thero{margin-top:26px;padding:22px 24px;border-radius:18px;border:1px solid #2A241A;position:relative;overflow:hidden;
+         background:radial-gradient(120% 140% at 0% 0%, rgba(234,184,111,.16), transparent 55%), #0E0E0E}
+  .thero::after{content:"";position:absolute;right:-40px;top:-30px;width:230px;height:230px;background:url(mark.png) center/contain no-repeat;opacity:.07}
+  .tkicker{display:inline-flex;align-items:center;gap:8px;font:700 15px/1 var(--cond);letter-spacing:.04em;padding:6px 10px;border-radius:99px;background:var(--kb,#1E1E1E);color:var(--kc,var(--muted))}
+  .tkicker.up{--kb:rgba(76,195,138,.14);--kc:#5FD49B} .tkicker.down{--kb:rgba(240,106,106,.14);--kc:#F48A8A} .tkicker.flat{--kb:rgba(234,184,111,.12);--kc:var(--gold2)}
+  .tline{font:800 clamp(28px,4.4vw,44px)/1.05 var(--cond);margin:12px 0 0;max-width:22ch;position:relative;z-index:1}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:18px}
+  .kpi{all:unset;box-sizing:border-box;cursor:pointer;padding:12px 12px 8px;border-radius:14px;background:var(--s1);border:1px solid #1F1F1F;display:flex;flex-direction:column;gap:2px;min-width:0;
+       transition:border-color .15s,background .15s,transform .15s}
+  .kpi:hover{border-color:#3A3226;transform:translateY(-2px)}
+  .kpi:focus-visible{outline:2px solid var(--gold2)}
+  .kpi[aria-selected="true"]{border-color:var(--gold);background:linear-gradient(180deg,rgba(234,184,111,.10),rgba(234,184,111,0) 70%),var(--s1)}
+  .kpi .kl{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kpi .kv{font:800 30px/1 var(--cond)}
+  .kpi .kd{font:700 13px/1 var(--cond);letter-spacing:.02em}
+  .kd.good{color:#5FD49B} .kd.bad{color:#F48A8A} .kd.same{color:var(--faint)}
+  .kpi svg{width:100%;height:30px;margin-top:4px}
+  .tmain{margin-top:12px;padding:16px 18px 10px;border-radius:16px;background:var(--s1);border:1px solid #1F1F1F}
+  .tmhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .tmt{font:800 24px/1.1 var(--cond)}
+  .chart.flat{border-top:0;padding-top:4px}
+  .chart .draw{transition:stroke-dashoffset 1.1s cubic-bezier(.3,.7,.2,1)}
+  .chart .grow{transform-box:fill-box;transform-origin:bottom;animation:grow .6s cubic-bezier(.2,.8,.3,1) both}
+  .chart .growd{transform-box:fill-box;transform-origin:top;animation:grow .6s cubic-bezier(.2,.8,.3,1) both}
+  @keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+  .movers{display:grid;gap:8px}
+  .mover{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--s1);border:1px solid #1F1F1F}
+  .mover .mn{min-width:0}
+  .mover .mn small{display:block;color:var(--faint);font-size:12px}
+  .mover .delta{font:800 22px/1 var(--cond);min-width:54px;text-align:right}
+  .mover .delta.up{color:#5FD49B} .mover .delta.down{color:#F48A8A}
+  .vsbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .vsbar .vs{font:800 20px var(--cond);color:var(--gold)}
+  .vsbar .select{min-width:180px}
+  .vsgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 6px}
+  .vsgrid > div{background:var(--s1);border:1px solid #1F1F1F;border-radius:12px;padding:10px 12px}
+  .vsgrid .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .vsgrid .row{display:flex;justify-content:space-between;align-items:baseline;font:800 22px/1.1 var(--cond)}
+  .vsgrid .row span{color:var(--faint)}
+  .vsgrid .row .win{color:var(--gold)}
+  .vsgrid .row .win2{color:#9FC3FF}
+  @media (max-width:900px){ .kpis{grid-template-columns:repeat(3,1fr)} .vsgrid{grid-template-columns:1fr 1fr} }
+  @media (max-width:420px){ .kpis{grid-template-columns:1fr 1fr} }
+
   details.notes{margin-top:40px;color:var(--muted);font-size:14px}
   details.notes summary{cursor:pointer;font:600 18px var(--cond);color:var(--text)}
   details.notes li{margin:6px 0;max-width:75ch}
@@ -547,22 +592,33 @@
 
   <!-- TENDENCIAS -->
   <section data-view="tendencias" hidden>
-    <h2>Goles por partido</h2>
-    <div class="legend"><span><i style="background:var(--gold)"></i>A favor</span><span><i style="background:#6B6255"></i>En contra</span></div>
-    <div class="chart" id="chGoals"></div>
+    <div class="thero">
+      <div class="tkicker" id="trendKicker"></div>
+      <h2 class="tline" id="trendLine"></h2>
+      <p class="lede" id="trendSub" style="margin-top:8px"></p>
+    </div>
 
-    <h2>Nota media del equipo</h2>
-    <p class="lede">Promedio de las notas de los jugadores humanos en cada partido, con la media de los últimos 5 en dorado.</p>
-    <div class="chart" id="chRating"></div>
+    <div class="kpis" id="kpis" role="tablist" aria-label="Elige qué ver en el gráfico"></div>
+    <div class="tmain">
+      <div class="tmhead"><div><div class="tmt" id="mainTitle"></div><div class="muted small" id="mainSub"></div></div>
+        <div class="legend" id="mainLegend"></div></div>
+      <div class="chart flat" id="chMain"></div>
+    </div>
 
-    <h2>Racha</h2>
-    <p class="lede">Porcentaje de victorias en los últimos 5 partidos, partido a partido.</p>
-    <div class="chart" id="chForm"></div>
+    <div class="twocol">
+      <div><h2>Viene subiendo</h2><p class="lede">Nota de sus últimos 3 partidos contra la de antes.</p><div class="movers" id="upList"></div></div>
+      <div><h2>Viene bajando</h2><p class="lede">Los que necesitan levantar.</p><div class="movers" id="downList"></div></div>
+    </div>
 
-    <h2>Jugador por jugador</h2>
-    <p class="lede">Nota de cada partido. Los puntos dorados son partidos con gol o asistencia.</p>
-    <label class="muted small">Jugador <select class="select" id="playerSel"></select></label>
-    <div class="chart" id="chPlayer" style="margin-top:10px"></div>
+    <h2>Goles partido a partido</h2>
+    <p class="lede">Arriba los que metimos, abajo los que nos metieron.</p>
+    <div class="chart" id="chGoals2"></div>
+
+    <h2>Cara a cara</h2>
+    <p class="lede">Elige dos jugadores y compara su nota partido a partido.</p>
+    <div class="vsbar"><select class="select" id="vsA" aria-label="Primer jugador"></select><span class="vs">vs</span><select class="select" id="vsB" aria-label="Segundo jugador"></select></div>
+    <div class="vsgrid" id="vsStats"></div>
+    <div class="chart" id="chVs"></div>
   </section>
   </main>
 
@@ -1116,46 +1172,207 @@ function boot(S){
       [fmt(n ? passes / n : null, 0), 'pases completados por partido'], [pct(tka ? 100 * tk / tka : null), 'entradas ganadas']]);
 
     /* Tendencias */
+    fillVsSelects(P);
     drawCharts();
-    const sel = $('playerSel'), prev = sel.value; sel.textContent = '';
-    P.slice().sort((a,b) => b.pj - a.pj || a.name.localeCompare(b.name)).forEach(p => { const o = el('option', null, `${p.name} (${p.pj} PJ)`); o.value = p.name; sel.append(o); });
-    if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
-    drawPlayer();
     const vis = document.querySelector('[data-view]:not([hidden])'); if (vis) animateIn(vis);
   }
   const tables = {}; function makeTableOnce(id, f){ return tables[id] || (tables[id] = f()); }
 
+  /* ---------- Tendencias ---------- */
+  const lblD = m => new Date(m.ts*1000).toLocaleDateString('es', {day:'numeric', month:'numeric'});
+  const teamRating = m => avg(m.lineup.filter(l => l.sec > 600), l => l.rating);
+  const METRICS = [
+    {id:'win', label:'% de victorias', fmt:v => pct(v), d:0, val:(m, i, ch) => { const w = ch.slice(Math.max(0, i - 4), i + 1); return 100 * w.filter(x => x.res === 'G').length / w.length; }, domain:() => [0, 100], ticks:[0, 50, 100], tf:t => t + '%', agg:'last',
+     title:'Racha de victorias', sub:'Porcentaje de victorias en los últimos 5 partidos, partido a partido'},
+    {id:'rating', label:'Nota media', fmt:v => fmt(v, 2), val:m => teamRating(m), domain:() => [5, 10], ticks:[5, 7.5, 10], tf:t => fmt(t, 1),
+     title:'Nota media del equipo', sub:'Promedio de los jugadores humanos en cada partido; en dorado, la media de los últimos 5'},
+    {id:'gf', label:'Goles a favor', fmt:v => fmt(v, 1), val:m => m.gf, domain:d => [0, Math.max(4, ...d)], title:'Goles a favor', sub:'Por partido; en dorado, la media de los últimos 5'},
+    {id:'ga', label:'Goles en contra', fmt:v => fmt(v, 1), val:m => m.ga, lowerBetter:true, domain:d => [0, Math.max(4, ...d)], title:'Goles en contra', sub:'Por partido; cuanto más abajo, mejor'},
+    {id:'shots', label:'Tiros', fmt:v => fmt(v, 1), val:m => m.us ? m.us.sh : null, domain:d => [0, Math.max(5, ...d)], title:'Tiros por partido', sub:'Tiros de los jugadores humanos'},
+    {id:'pass', label:'% de pases', fmt:v => pct(v), val:m => m.us && m.us.pa ? 100 * m.us.pm / m.us.pa : null, domain:() => [50, 100], ticks:[50, 75, 100], tf:t => t + '%',
+     title:'Precisión de pases', sub:'Pases completados sobre intentados, partido a partido'},
+  ];
+  let metricSel = 'rating';
+  function series(metric, chrono){
+    const vals = chrono.map((m, i) => metric.val(m, i, chrono));
+    return chrono.map((m, i) => { const w = vals.slice(Math.max(0, i - 4), i + 1).filter(v => v != null); return {x:lblD(m), v:vals[i], r5: w.length ? avg(w, v => v) : null, m}; });
+  }
+  function splitRecent(arr){ const k = Math.min(5, Math.max(1, Math.floor(arr.length / 2))); return [arr.slice(-k), arr.slice(0, -k)]; }
+
+  function trendChart(box, o){
+    box.textContent = '';
+    const data = o.data;
+    if (data.length < 2) { box.append(el('div','empty','Hacen falta al menos 2 partidos para dibujar esto.')); return; }
+    const W = box.clientWidth || 600, H = o.h || 240, m = {t:14, r:12, b:26, l:36}, iw = W - m.l - m.r, ih = H - m.t - m.b, ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+    svg.setAttribute('role','img'); svg.setAttribute('aria-label', o.label);
+    const mk = (tag, at) => { const n = document.createElementNS(ns, tag); for (const k in at) n.setAttribute(k, at[k]); return n; };
+    const [y0, y1] = o.domain, Y = v => m.t + ih - (Math.max(y0, Math.min(y1, v)) - y0) / (y1 - y0) * ih;
+    const X = i => m.l + (data.length === 1 ? iw / 2 : i * iw / (data.length - 1));
+    const uid = 'g' + Math.random().toString(36).slice(2, 7);
+    const defs = mk('defs', {}); svg.append(defs);
+    (o.ticks || [y0, (y0 + y1) / 2, y1]).forEach(tk => { svg.append(mk('line', {x1:m.l, x2:W - m.r, y1:Y(tk), y2:Y(tk), stroke:'#1E1E1E'}));
+      const tx = mk('text', {x:m.l - 6, y:Y(tk) + 4, 'text-anchor':'end'}); tx.textContent = o.tf ? o.tf(tk) : fmt(tk, 0); svg.append(tx); });
+    const every = Math.max(1, Math.ceil(data.length / Math.floor(iw / 54)));
+    data.forEach((d, i) => { if (i % every === 0 || i === data.length - 1) { const tx = mk('text', {x:X(i), y:H - 6, 'text-anchor':'middle', class:'lbl'}); tx.textContent = d.x; svg.append(tx); } });
+    const smooth = pts => pts.map((p, i) => { if (!i) return `M${p[0]},${p[1]}`; const q = pts[i - 1], cx = (q[0] + p[0]) / 2; return `C${cx},${q[1]} ${cx},${p[1]} ${p[0]},${p[1]}`; }).join('');
+    const paths = [];
+    o.series.forEach((s, si) => {
+      const pts = data.map((d, i) => [X(i), d[s.key]]).filter(p => p[1] != null).map(p => [p[0], Y(p[1])]);
+      if (pts.length < 2) return;
+      if (s.area) {
+        const gid = uid + si, lg = mk('linearGradient', {id:gid, x1:0, y1:0, x2:0, y2:1});
+        lg.append(mk('stop', {offset:'0%', 'stop-color':s.color, 'stop-opacity':.32}), mk('stop', {offset:'100%', 'stop-color':s.color, 'stop-opacity':0}));
+        defs.append(lg);
+        const area = mk('path', {d: smooth(pts) + `L${pts[pts.length-1][0]},${m.t + ih}L${pts[0][0]},${m.t + ih}Z`, fill:`url(#${gid})`});
+        area.style.opacity = reduce ? 1 : 0; area.style.transition = 'opacity .9s ease .3s'; svg.append(area); paths.push({area});
+      }
+      const p = mk('path', {d: smooth(pts), fill:'none', stroke:s.color, 'stroke-width':s.w || 2.5, 'stroke-linecap':'round', class:'draw'});
+      if (s.dash) p.setAttribute('stroke-dasharray', s.dash); svg.append(p); if (!s.dash) paths.push({line:p});
+      if (s.dots) data.forEach((d, i) => { if (d[s.key] == null) return; svg.append(mk('circle', {cx:X(i), cy:Y(d[s.key]), r:s.r || 3.5, fill: s.dotColor ? s.dotColor(d) : s.color, stroke:'#121212', 'stroke-width':1.5})); });
+    });
+    const guide = mk('line', {y1:m.t, y2:m.t + ih, stroke:'#5A5348', 'stroke-dasharray':'3 3', visibility:'hidden'}); svg.append(guide);
+    const hot = mk('circle', {r:6, fill:'none', stroke:'#F3CC8F', 'stroke-width':2, visibility:'hidden'}); svg.append(hot);
+    box.append(svg);
+    if (!reduce) requestAnimationFrame(() => paths.forEach(pp => {
+      if (pp.line) { const L = pp.line.getTotalLength(); pp.line.style.strokeDasharray = L; pp.line.style.strokeDashoffset = L; pp.line.getBoundingClientRect(); requestAnimationFrame(() => pp.line.style.strokeDashoffset = 0); }
+      if (pp.area) requestAnimationFrame(() => pp.area.style.opacity = 1);
+    }));
+    const tip = el('div','tip'); tip.hidden = true; box.append(tip);
+    const move = e => {
+      const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width);
+      const i = Math.max(0, Math.min(data.length - 1, Math.round((px - m.l) / (iw / Math.max(1, data.length - 1)))));
+      guide.setAttribute('x1', X(i)); guide.setAttribute('x2', X(i)); guide.setAttribute('visibility','visible');
+      const main = o.series[0].key; if (data[i][main] != null) { hot.setAttribute('cx', X(i)); hot.setAttribute('cy', Y(data[i][main])); hot.setAttribute('visibility','visible'); }
+      tip.textContent = ''; o.tip(tip, data[i]); tip.hidden = false;
+      const cx = X(i) * r.width / W; tip.style.left = Math.max(0, Math.min(r.width - tip.offsetWidth, cx - tip.offsetWidth / 2)) + 'px'; tip.style.top = '0px';
+    };
+    svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move);
+    svg.addEventListener('pointerleave', () => { tip.hidden = true; guide.setAttribute('visibility','hidden'); hot.setAttribute('visibility','hidden'); });
+  }
+  function miniSpark(vals, color){
+    const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', '0 0 100 30'); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
+    const v = vals.filter(x => x != null); if (v.length < 2) return svg;
+    const lo = Math.min(...v), hi = Math.max(...v), rg = hi - lo || 1, pts = vals.map((x, i) => x == null ? null : [i * 100 / (vals.length - 1), 27 - (x - lo) / rg * 24]).filter(Boolean);
+    const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ',' + p[1]).join('');
+    const a = document.createElementNS(ns, 'path'); a.setAttribute('d', d + `L${pts[pts.length-1][0]},30L${pts[0][0]},30Z`); a.setAttribute('fill', color); a.setAttribute('opacity', '.14'); svg.append(a);
+    const l = document.createElementNS(ns, 'path'); l.setAttribute('d', d); l.setAttribute('fill', 'none'); l.setAttribute('stroke', color); l.setAttribute('stroke-width', '2'); l.setAttribute('vector-effect', 'non-scaling-stroke'); svg.append(l);
+    return svg;
+  }
+
   function drawCharts(){
-    if ($('chGoals').closest('[data-view]').hidden) return;
-    const chrono = MS.slice().sort((a,b) => a.ts - b.ts).slice(-30);
-    const lbl = m => new Date(m.ts*1000).toLocaleDateString('es', {day:'numeric', month:'numeric'});
-    const gmax = Math.max(3, ...chrono.map(m => Math.max(m.gf, m.ga)));
-    chart($('chGoals'), {label:'Goles a favor y en contra por partido', bars:true, domain:[0, gmax], ticks:[0, Math.round(gmax/2), gmax],
-      data: chrono.map(m => ({x:lbl(m), a:m.gf, b:m.ga, m})),
-      tip:(t,d) => { t.append(el('b', null, `${d.m.gf}-${d.m.ga}`), ` contra ${d.m.opp}`, el('br'), `${day(d.m.ts)}, ${d.m.type}`); }});
-    const rd = chrono.map((m, i) => { const r = avg(m.lineup.filter(l => l.sec > 600), l => l.rating); return {x:lbl(m), r, m}; });
-    rd.forEach((d, i) => { const w = rd.slice(Math.max(0, i - 4), i + 1).filter(x => x.r != null); d.r5 = w.length ? avg(w, x => x.r) : null; });
-    chart($('chRating'), {label:'Nota media del equipo por partido', domain:[4, 10], ticks:[4, 6, 8, 10], data: rd,
-      lines:[{key:'r', color:'#5A5348', w:1.5, dots:true, dotColor: d => d.m.res === 'G' ? '#4CC38A' : d.m.res === 'P' ? '#F06A6A' : '#CFC6B6'}, {key:'r5', color:'#EAB86F', w:2.5}],
-      tip:(t,d) => { t.append(el('b', null, fmt(d.r,2)), ` de nota media (últimos 5: ${fmt(d.r5,2)})`, el('br'), `${RES[d.m.res]} ${d.m.gf}-${d.m.ga} contra ${d.m.opp}`); }});
-    const fd = chrono.map((m, i) => { const w = chrono.slice(Math.max(0, i - 4), i + 1); return {x:lbl(m), w: 100 * w.filter(x => x.res === 'G').length / w.length, n:w.length, m}; });
-    chart($('chForm'), {label:'Porcentaje de victorias en los últimos 5 partidos', domain:[0, 100], ticks:[0, 50, 100], tickFmt: t => t + '%', data: fd,
-      lines:[{key:'w', color:'#EAB86F', w:2.5, dots:true, r:3}],
-      tip:(t,d) => { t.append(el('b', null, pct(d.w)), ` de victorias en los últimos ${d.n}`, el('br'), `${RES[d.m.res]} ${d.m.gf}-${d.m.ga} contra ${d.m.opp}`); }});
+    if ($('chMain').closest('[data-view]').hidden) return;
+    const chrono = MS.slice().sort((a,b) => a.ts - b.ts).slice(-40), n = chrono.length;
+    /* Titular */
+    const rs = chrono.map(teamRating), [rec, prev] = splitRecent(chrono), [rr, pr] = splitRecent(rs.filter(v => v != null));
+    const wr = rec.length ? 100 * rec.filter(m => m.res === 'G').length / rec.length : null, wp = prev.length ? 100 * prev.filter(m => m.res === 'G').length / prev.length : null;
+    const dR = rr.length && pr.length ? avg(rr, v => v) - avg(pr, v => v) : 0;
+    const k = $('trendKicker'), line = $('trendLine'), sub = $('trendSub');
+    if (n < 2) { k.className = 'tkicker flat'; k.textContent = 'Recién empezando'; line.textContent = 'Con el segundo partido guardado empiezan las tendencias.'; sub.textContent = ''; }
+    else {
+      const won = rec.filter(m => m.res === 'G').length, mood = dR > .15 || (wp != null && wr - wp >= 20) ? 'up' : dR < -.15 || (wp != null && wp - wr >= 20) ? 'down' : 'flat';
+      k.className = 'tkicker ' + mood; k.textContent = mood === 'up' ? '▲ En subida' : mood === 'down' ? '▼ En bajada' : '● Estables';
+      line.textContent = mood === 'up' ? `Fusion viene creciendo: ganó ${won} de los últimos ${rec.length}.` : mood === 'down' ? `Toca reaccionar: ${won} de ${rec.length} ganados últimamente.` : `Fusion se mantiene: ${won} de los últimos ${rec.length} ganados.`;
+      sub.textContent = pr.length ? `La nota media del equipo pasó de ${fmt(avg(pr, v => v), 2)} a ${fmt(avg(rr, v => v), 2)} comparando los últimos ${rec.length} partidos con los ${prev.length} anteriores.${n < 10 ? ' Con pocos partidos estas comparaciones se mueven mucho.' : ''}` : '';
+    }
+    /* KPIs */
+    const kp = $('kpis'); kp.textContent = '';
+    METRICS.forEach(mt => {
+      const sr = series(mt, chrono), vals = sr.map(d => d.v), [a, b] = splitRecent(vals.filter(v => v != null));
+      let now = a.length ? avg(a, v => v) : null, before = b.length ? avg(b, v => v) : null;
+      if (mt.id === 'win') { now = wr; before = wp; }   // mismo corte que el titular: últimos partidos contra los anteriores
+      const diff = now != null && before != null ? now - before : null;
+      const good = diff == null || Math.abs(diff) < 1e-9 ? 'same' : (diff > 0) !== !!mt.lowerBetter ? 'good' : 'bad';
+      const btn = el('button','kpi'); btn.type = 'button'; btn.setAttribute('role','tab'); btn.setAttribute('aria-selected', mt.id === metricSel);
+      btn.onclick = () => { metricSel = mt.id; [...kp.children].forEach(c => c.setAttribute('aria-selected', c === btn)); drawMain();
+        const box = document.querySelector('.tmain'), r = box.getBoundingClientRect(); if (r.top > innerHeight * .55 || r.bottom < 0) box.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'}); };
+      const kv = el('div','kv', now == null ? '—' : mt.fmt(now)); kv.dataset.count = '';
+      const kd = el('div','kd ' + good, diff == null ? 'sin comparar' : (Math.abs(diff) < 1e-9 ? '= igual' : (diff > 0 ? '▲ ' : '▼ ') + mt.fmt(Math.abs(diff)).replace('%', mt.id === 'win' || mt.id === 'pass' ? ' pts' : '')));
+      btn.append(el('div','kl', mt.label), kv, kd, miniSpark(vals.slice(-12), good === 'bad' ? '#F06A6A' : '#EAB86F'));
+      kp.append(btn);
+    });
+    drawMain();
+    /* Quién sube y quién baja */
+    const movers = aggregate(MS).filter(p => p.ratings.length >= 4).map(p => { const r = p.ratings.map(x => x.r), last = r.slice(-3), before = r.slice(0, -3);
+      return {p, d: avg(last, v => v) - avg(before, v => v), last: avg(last, v => v)}; });
+    const fillMovers = (box, list, dir) => {
+      box.textContent = '';
+      if (!list.length) { box.append(el('div','empty', movers.length ? (dir === 'up' ? 'Nadie viene subiendo ahora mismo.' : 'Nadie viene bajando. Bien ahí.') : 'Aparece cuando alguien tenga 4 partidos guardados.')); return; }
+      list.forEach(({p, d, last}) => { const r = el('div','mover'), nm = el('div','mn'); nm.append(plink(p.name), el('small', null, `${fmt(last, 2)} en sus últimos 3`));
+        const sp = sparkline(p.ratings.slice(-8)); r.append(avatar(p.name), nm, sp, el('div', 'delta ' + dir, (d > 0 ? '+' : '−') + fmt(Math.abs(d), 2))); box.append(r); });
+    };
+    fillMovers($('upList'), movers.filter(x => x.d > .05).sort((a,b) => b.d - a.d).slice(0, 4), 'up');
+    fillMovers($('downList'), movers.filter(x => x.d < -.05).sort((a,b) => a.d - b.d).slice(0, 4), 'down');
+    /* Goles divergentes */
+    drawGoals(chrono);
+    drawVs();
+    animateIn($('kpis'));
   }
-  function drawPlayer(){
-    if ($('chPlayer').closest('[data-view]').hidden) return;
-    const name = $('playerSel').value;
-    const pts = MS.slice().sort((a,b) => a.ts - b.ts).map(m => ({m, l: m.lineup.find(l => l.name === name)})).filter(x => x.l).slice(-30)
-      .map(x => ({x:new Date(x.m.ts*1000).toLocaleDateString('es', {day:'numeric', month:'numeric'}), r:x.l.rating, l:x.l, m:x.m}));
-    chart($('chPlayer'), {label:`Nota de ${name} por partido`, domain:[4, 10], ticks:[4, 6, 8, 10], data: pts,
-      lines:[{key:'r', color:'#7E7668', w:1.5, dots:true, r:4, dotColor: d => d.l.g + d.l.a ? '#EAB86F' : '#B9AE9C'}],
-      tip:(t,d) => { t.append(el('b', null, fmt(d.r,1)), ` contra ${d.m.opp}`);
-        const ex = [d.l.g ? plural(d.l.g,'gol','goles') : '', d.l.a ? plural(d.l.a,'asistencia','asistencias') : '', d.l.mom ? 'MVP' : ''].filter(Boolean);
-        if (ex.length) { t.append(el('br'), ex.join(', ')); } t.append(el('br'), `${RES[d.m.res]} ${d.m.gf}-${d.m.ga}, ${d.m.pos || d.l.pos}`); }});
+  function drawMain(){
+    const mt = METRICS.find(x => x.id === metricSel), chrono = MS.slice().sort((a,b) => a.ts - b.ts).slice(-40), data = series(mt, chrono);
+    $('mainTitle').textContent = mt.title; $('mainSub').textContent = mt.sub;
+    const lg = $('mainLegend'); lg.textContent = '';
+    const leg = (c, t2) => { const s = el('span'), i = el('i'); i.style.background = c; s.append(i, t2); lg.append(s); };
+    if (mt.id === 'win') leg('#EAB86F', 'Últimos 5, partido a partido'); else { leg('#7E7668', 'Cada partido'); leg('#EAB86F', 'Media de los últimos 5'); }
+    const vals = data.map(d => d.v).filter(v => v != null);
+    const ser = mt.id === 'win' ? [{key:'v', color:'#EAB86F', area:true, dots:true, w:3, dotColor: d => d.m.res === 'G' ? '#4CC38A' : d.m.res === 'P' ? '#F06A6A' : '#CFC6B6'}]
+      : [{key:'r5', color:'#EAB86F', area:true, w:3}, {key:'v', color:'#7E7668', w:1.5, dash:'4 4', dots:true, r:4, dotColor: d => d.m.res === 'G' ? '#4CC38A' : d.m.res === 'P' ? '#F06A6A' : '#CFC6B6'}];
+    const dom = mt.domain(vals);
+    trendChart($('chMain'), {label: mt.title, data, series: ser, domain: dom, ticks: mt.ticks || [dom[0], Math.round((dom[0] + dom[1]) / 2), dom[1]], tf: mt.tf, h: 260,
+      tip:(t, d) => { t.append(el('b', null, d.v == null ? '—' : mt.fmt(d.v)), ` ${mt.label.toLowerCase()}`); if (mt.id !== 'win' && d.r5 != null) t.append(` (últimos 5: ${mt.fmt(d.r5)})`);
+        t.append(el('br'), `${RES[d.m.res]} ${d.m.gf}-${d.m.ga} contra ${d.m.opp}`, el('br'), `${day(d.m.ts)}, ${d.m.type.toLowerCase()}`); }});
   }
-  $('playerSel').onchange = drawPlayer;
-  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawCharts(); drawPlayer(); }, 150); });
+  function drawGoals(chrono){
+    const box = $('chGoals2'); box.textContent = '';
+    if (chrono.length < 2) { box.append(el('div','empty','Hacen falta al menos 2 partidos.')); return; }
+    const W = box.clientWidth || 600, H = 220, m = {t:14, r:8, b:22, l:28}, iw = W - m.l - m.r, ih = H - m.t - m.b, ns = 'http://www.w3.org/2000/svg';
+    const mx = Math.max(3, ...chrono.map(x => Math.max(x.gf, x.ga))), mid = m.t + ih / 2, sc = (ih / 2 - 10) / mx, band = iw / chrono.length, bw = Math.min(26, band * .6);
+    const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H); svg.setAttribute('role','img');
+    svg.setAttribute('aria-label', 'Goles por partido: ' + chrono.map(x => `${x.gf}-${x.ga}`).join(', '));
+    const mk = (tag, at) => { const e = document.createElementNS(ns, tag); for (const k in at) e.setAttribute(k, at[k]); return e; };
+    svg.append(mk('line', {x1:m.l, x2:W - m.r, y1:mid, y2:mid, stroke:'#3A3A3A'}));
+    [[mx, mid - mx * sc], [mx, mid + mx * sc]].forEach(([v, y]) => { const tx = mk('text', {x:m.l - 6, y:y + 4, 'text-anchor':'end'}); tx.textContent = v; svg.append(tx); });
+    chrono.forEach((x, i) => {
+      const cx = m.l + band * (i + .5), delay = (i * 25) + 'ms';
+      if (x.gf) { const r = mk('rect', {x:cx - bw/2, y:mid - x.gf * sc, width:bw, height:x.gf * sc - 1, rx:3, fill:'#EAB86F', class:'grow'}); r.style.animationDelay = delay; svg.append(r); }
+      if (x.ga) { const r = mk('rect', {x:cx - bw/2, y:mid + 1, width:bw, height:x.ga * sc, rx:3, fill:'#5A5348', class:'growd'}); r.style.animationDelay = delay; svg.append(r); }
+      svg.append(mk('circle', {cx, cy:mid, r:3.5, fill: x.res === 'G' ? '#4CC38A' : x.res === 'P' ? '#F06A6A' : '#CFC6B6'}));
+      const every = Math.max(1, Math.ceil(chrono.length / Math.floor(iw / 54)));
+      if (i % every === 0 || i === chrono.length - 1) { const tl = mk('text', {x:cx, y:H - 5, 'text-anchor':'middle', class:'lbl'}); tl.textContent = lblD(x); svg.append(tl); }
+    });
+    box.append(svg);
+    const tip = el('div','tip'); tip.hidden = true; box.append(tip);
+    const move = e => { const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * (W / r.width), i = Math.max(0, Math.min(chrono.length - 1, Math.floor((px - m.l) / band))), x = chrono[i];
+      tip.textContent = ''; tip.append(el('b', null, `${x.gf}-${x.ga}`), ` contra ${x.opp}`, el('br'), `${day(x.ts)}, ${x.type.toLowerCase()}`); tip.hidden = false;
+      const cx = (m.l + band * (i + .5)) * r.width / W; tip.style.left = Math.max(0, Math.min(r.width - tip.offsetWidth, cx - tip.offsetWidth / 2)) + 'px'; tip.style.top = '0px'; };
+    svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move); svg.addEventListener('pointerleave', () => tip.hidden = true);
+  }
+  /* Cara a cara */
+  function fillVsSelects(P){
+    const A = $('vsA'), B = $('vsB'), pa = A.value, pb = B.value, list = P.slice().sort((a,b) => b.pj - a.pj || a.name.localeCompare(b.name));
+    [A, B].forEach(s => { s.textContent = ''; list.forEach(p => { const o = el('option', null, `${p.name} (${p.pj} PJ)`); o.value = p.name; s.append(o); }); });
+    A.value = list.some(p => p.name === pa) ? pa : (list[0] || {}).name || '';
+    B.value = list.some(p => p.name === pb) && pb !== A.value ? pb : (list.find(p => p.name !== A.value) || {}).name || '';
+  }
+  function drawVs(){
+    if ($('chVs').closest('[data-view]').hidden) return;
+    const a = $('vsA').value, b = $('vsB').value, P = aggregate(MS), pa = P.find(p => p.name === a), pb = P.find(p => p.name === b);
+    const g = $('vsStats'); g.textContent = '';
+    if (!pa || !pb) { $('chVs').textContent = ''; return; }
+    [['Nota media', 'rating', 2], ['G+A por 90', 'ga90', 2], ['% de pases', 'passPct', 0, '%'], ['Entradas por 90', 'tk90', 1]].forEach(([k, key, d, suf='']) => {
+      const box = el('div'), row = el('div','row'), va = pa[key], vb = pb[key];
+      const A = el('b', va > vb ? 'win' : null, va == null ? '—' : fmt(va, d) + suf), B = el('b', vb > va ? 'win2' : null, vb == null ? '—' : fmt(vb, d) + suf);
+      row.append(A, el('span', null, 'vs'), B); box.append(el('div','k', k), row); g.append(box);
+    });
+    const ms = MS.slice().sort((x,y) => x.ts - y.ts).filter(m => m.lineup.some(l => l.name === a || l.name === b)).slice(-30);
+    const data = ms.map(m => ({x:lblD(m), a:(m.lineup.find(l => l.name === a) || {}).rating ?? null, b:(m.lineup.find(l => l.name === b) || {}).rating ?? null, m}));
+    trendChart($('chVs'), {label:`Nota de ${a} y ${b} por partido`, data, domain:[4, 10], ticks:[4, 7, 10], tf:t => t, h:220,
+      series:[{key:'a', color:'#EAB86F', w:3, dots:true, r:4}, {key:'b', color:'#9FC3FF', w:3, dots:true, r:4}],
+      tip:(t, d) => { const s1 = el('b', null, `${a}: ${d.a == null ? 'no jugó' : fmt(d.a, 1)}`), s2 = el('span', null, `${b}: ${d.b == null ? 'no jugó' : fmt(d.b, 1)}`); s2.style.color = '#9FC3FF';
+        t.append(s1, el('br'), s2, el('br'), `${d.m.gf}-${d.m.ga} contra ${d.m.opp}`); }});
+  }
+  $('vsA').onchange = drawVs; $('vsB').onchange = drawVs;
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawCharts(); }, 150); });
 
   /* ---------- rankings top 5 ---------- */
   const DLICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
@@ -1439,7 +1656,7 @@ function boot(S){
     const v = views.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'resumen';
     document.querySelectorAll('[data-view]').forEach(s => s.hidden = s.dataset.view !== v);
     document.querySelectorAll('.tabs a, .bnav a').forEach(a => a.dataset.v === v ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'));
-    if (v === 'tendencias') { drawCharts(); drawPlayer(); }
+    if (v === 'tendencias') { drawCharts(); }
     if (document.activeElement && document.activeElement.closest('.tabs')) document.activeElement.blur();
     animateIn(document.querySelector(`[data-view="${v}"]`));
   }
