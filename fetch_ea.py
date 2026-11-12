@@ -20,14 +20,30 @@ HEADERS = {
 }
 
 
+try:
+    # EA rechaza clientes que no parecen un navegador; curl_cffi imita la conexión de Chrome.
+    from curl_cffi import requests as cffi
+except ImportError:
+    cffi = None
+
+
+def fetch(url):
+    if cffi:
+        r = cffi.get(url, headers={k: v for k, v in HEADERS.items() if k != "User-Agent"},
+                     impersonate="chrome", timeout=20)
+        r.raise_for_status()
+        return r.json()
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
 def get(path, **params):
     url = f"{BASE}/{path}?{urllib.parse.urlencode(params)}"
     last = None
     for attempt in range(3):
         try:
-            req = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(req, timeout=20) as r:
-                return json.loads(r.read().decode("utf-8"))
+            return fetch(url)
         except Exception as e:  # 403, timeouts, etc.
             last = e
             print(f"  intento {attempt + 1} falló: {path}: {e}")

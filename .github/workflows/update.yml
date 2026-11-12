@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Instalar dependencias
+        run: pip install --quiet curl_cffi
+
       - name: Traer datos de EA
         run: python3 fetch_ea.py
 
