@@ -325,42 +325,6 @@
    "favoritePosition": "forward"
   },
   {
-   "name": "xMilan14-",
-   "gamesPlayed": "56",
-   "winRate": "76",
-   "goals": "8",
-   "assists": "22",
-   "cleanSheetsDef": "0",
-   "cleanSheetsGK": "0",
-   "shotSuccessRate": "40",
-   "passesMade": "776",
-   "passSuccessRate": "81",
-   "ratingAve": "7.4",
-   "tacklesMade": "77",
-   "tackleSuccessRate": "69",
-   "proName": "Milan",
-   "proPos": "25",
-   "proStyle": "0",
-   "proHeight": "167",
-   "proNationality": "61",
-   "proOverall": "78",
-   "proOverallStr": "78",
-   "manOfTheMatch": "2",
-   "redCards": "0",
-   "prevGoals": "1",
-   "prevGoals1": "1",
-   "prevGoals2": "0",
-   "prevGoals3": "1",
-   "prevGoals4": "0",
-   "prevGoals5": "0",
-   "prevGoals6": "0",
-   "prevGoals7": "0",
-   "prevGoals8": "0",
-   "prevGoals9": "0",
-   "prevGoals10": "0",
-   "favoritePosition": "forward"
-  },
-  {
    "name": "Chyno-r",
    "gamesPlayed": "8",
    "winRate": "62",
@@ -832,7 +796,7 @@
  "positionCount": {
   "midfielder": 5,
   "goalkeeper": 1,
-  "forward": 6,
+  "forward": 5,
   "defender": 5
  }
 }
